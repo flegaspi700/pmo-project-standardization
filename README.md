@@ -15,7 +15,9 @@ idea first (nothing is created until you've picked a direction), or an
 existing GitHub repo. It then runs `new-project.ps1` and interviews you to fill in the vision doc. It then sizes the project (Small or Standard) and
 proposes which docs are needed; docs you don't need become marked one-line
 stubs. For an existing GitHub repo, it first shows which files it would add
-and which it would keep, and asks before writing anything. For a Small project it also drafts docs 01–04 and asks "Is this OK?".
+and which it would keep, and asks before writing anything. It then reads the repo, records what
+exists (vision, stack, architecture) instead of recommending a new stack, and
+offers to brainstorm what to change next. For a Small project it also drafts docs 01–04 and asks "Is this OK?".
 
 **Or by hand:**
 
