@@ -7,7 +7,7 @@ Starter kit for new projects.
 | `project-template/` | The template. Everything in it is copied into each new project — docs, `AGENTS.md`, workflow commands (`.claude/skills/`), PR template, `.gitignore`. |
 | `new-project.ps1` | Copies `project-template` to a new folder, fills in the name and hosting (`-Hosting local\|github`, default local), runs `git init` on `main`. `-IntoExisting` adds the template to a repo you already cloned. |
 | `skills/new-project/` | Source of the `/new-project` Claude Code command (user level). |
-| `game-agent/` | The original planning docs this template was built from — kept as a filled-in example. |
+| `game-agent/` | Not in this repo. The original planning docs this template was built from live in [flegaspi700/game-agent](https://github.com/flegaspi700/game-agent) as a filled-in example. |
 
 ## Start a new project
 
@@ -20,18 +20,19 @@ stubs. For a Small project it also drafts docs 01–04 and asks "Is this OK?".
 **Or by hand:**
 
 ```powershell
-D:\Projects\Template\new-project.ps1 -Name "Guess Game"
-# creates D:\Projects\guess-game; add -Destination to put it elsewhere
+.\new-project.ps1 -Name "Guess Game"
+# creates guess-game in the script's default Destination (D:\Projects);
+# add -Destination to put it elsewhere
 ```
 
 If PowerShell blocks scripts:
-`powershell -ExecutionPolicy Bypass -File D:\Projects\Template\new-project.ps1 -Name "Guess Game"`
+`powershell -ExecutionPolicy Bypass -File .\new-project.ps1 -Name "Guess Game"`
 
 Then start Claude Code inside the new folder and run `/breakdown`.
 
 ## The `/new-project` command
 
-Claude Code finds user-level commands in `C:\Users\flega\.claude\skills\`.
+Claude Code finds user-level commands in `%USERPROFILE%\.claude\skills\`.
 That folder contains a **junction** (a folder shortcut) pointing here, so
 edits to `skills/new-project/SKILL.md` take effect immediately — nothing to
 re-install.
@@ -39,7 +40,7 @@ re-install.
 To set it up again on a new machine (PowerShell, no admin needed):
 
 ```powershell
-New-Item -ItemType Junction -Path "$env:USERPROFILE\.claude\skills\new-project" -Target "D:\Projects\Template\skills\new-project"
+New-Item -ItemType Junction -Path "$env:USERPROFILE\.claude\skills\new-project" -Target "<path-to-this-repo>\skills\new-project"
 ```
 
 ## Changing the template
