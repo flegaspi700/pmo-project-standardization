@@ -28,7 +28,14 @@ Ask for whatever wasn't given:
   2. **New GitHub repo** — create a repo and use the PR workflow. Also ask
      **private or public?** Recommend **private**; say that public means
      anyone can see the code and history, and that it can be changed later.
-  3. **Existing GitHub repo** — ask for its URL (`owner/name` or full URL).
+  3. **Existing GitHub repo** — let the user pick one. Run
+     `gh repo list --limit 30 --no-archived --source --json nameWithOwner,visibility,pushedAt`
+     and show a numbered list, most recently pushed first: name, private or
+     public, last-push date. Ask: "Pick a number, or paste a URL or
+     `owner/name` for a repo that isn't listed." If `gh` isn't signed in or
+     the list is empty, just ask for the URL. If the repo isn't the user's
+     own (a pasted one under another owner), say that the template will add
+     files to someone else's code, and confirm.
 
   Remember the answer as `local` (choice 1) or `github` (choices 2 and 3).
   For choice 3, the folder is the clone, so its name comes from the repo
@@ -89,7 +96,8 @@ fix it and retry, or carry on locally (then change the `AGENTS.md` line to
 **Existing GitHub repo:** clone first, before anything else. Don't run the
 script until the clone is done —
 `gh repo clone <repo> "<destination>\<folder-name>"`. A clone doesn't change
-the repo, so it's safe to do before asking.
+the repo, so it's safe to do before asking. If that folder already exists,
+say so and ask: use that copy as it is, or pick another destination.
 
 Then **preview and confirm before anything is written:**
 1. Run the script with `-DryRun`:
