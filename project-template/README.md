@@ -46,6 +46,7 @@ in this folder:
 
 | Command | What it does |
 |---|---|
+| `/brainstorm` | Optional, for a fuzzy idea: explore directions, pick one, record it in the vision |
 | `/breakdown` | Turn the vision or an epic into features and stories |
 | `/stack` | Choose and record the language and tools |
 | `/decide` | Compare options for a design choice and log the decision |
