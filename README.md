@@ -23,7 +23,7 @@ offers to brainstorm what to change next. For a Small project it also drafts doc
 
 ```powershell
 .\new-project.ps1 -Name "Guess Game"
-# creates guess-game in the script's default Destination (D:\Projects);
+# creates guess-game in the current folder;
 # add -Destination to put it elsewhere
 ```
 

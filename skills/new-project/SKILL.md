@@ -27,7 +27,8 @@ Then, by choice:
 - **Name** of the project
 - **The idea** in one or two sentences (for choice 2, a rough idea is
   fine). For choice 2, do step 1b now, before asking anything below.
-- **Where** to create it (default `D:\Projects`)
+- **Where** to create it (default: the folder this session was started
+  in — see "Default location" below)
 - **Hosting** — where will the project live? Offer two choices and
   recommend **local**:
   1. **Local only (default)** — git on this machine, no GitHub. Branches
@@ -49,13 +50,20 @@ public, last-push date. Ask: "Pick a number, or paste a URL or `owner/name`
 for a repo that isn't listed." If `gh` isn't signed in or the list is empty,
 just ask for the URL. If the repo isn't the user's own (a pasted one under
 another owner), say that the template will add files to someone else's
-code, and confirm. Also ask **where** to put the clone (default
-`D:\Projects`).
+code, and confirm. Also ask **where** to put the clone (default: the
+folder this session was started in — see "Default location" below).
 
 For choices 1 and 2, show the folder that will be created — the name lowercased with anything
 that isn't a letter or digit turned into dashes, e.g. "Guess Game!" →
-`D:\Projects\guess-game` — and confirm. If that folder already exists,
+`<destination>\guess-game` — and confirm. If that folder already exists,
 say so and ask for another name or location.
+
+**Default location:** the current working directory of this session (the
+folder `claude` was started in). Show the full path, e.g. "Where should it
+go? Default: `D:\Projects`". If that folder is the template folder
+(`D:\Projects\Template`) or inside it, or is itself inside a git repo,
+say so and don't offer it as the default — ask for a location instead, so
+a project isn't created inside another repo.
 
 ## 1b. Brainstorm (only for choice 2)
 
@@ -112,7 +120,7 @@ say so and ask: use that copy as it is, or pick another destination.
 
 Then **preview and confirm before anything is written:**
 1. Run the script with `-DryRun`:
-   `& "D:\Projects\Template\new-project.ps1" -Name "<repo-name>" -IntoExisting -Hosting github -DryRun`
+   `& "D:\Projects\Template\new-project.ps1" -Name "<repo-name>" -Destination "<destination>" -IntoExisting -Hosting github -DryRun`
    It prints `ADD` or `KEEP` per file and changes nothing.
 2. Show the result grouped, not as a long list: "Will add N files:
    `docs/` (17), `.claude/skills/` (10), `.github/`, `AGENTS.md`, …" and
@@ -131,7 +139,8 @@ Then **preview and confirm before anything is written:**
 
 On a yes, **create a branch first** (`git -C "<folder>" switch -c
 add-project-template`) so `main` stays clean, then run the script for real
-with `-Name "<repo-name>" -IntoExisting -Hosting github` (no `-DryRun`). It
+with `-Name "<repo-name>" -Destination "<destination>" -IntoExisting -Hosting github`
+(no `-DryRun`). It
 copies only the template files the repo doesn't already have and leaves the
 rest alone.
 
