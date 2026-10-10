@@ -135,10 +135,18 @@ with `-Name "<repo-name>" -IntoExisting -Hosting github` (no `-DryRun`). It
 copies only the template files the repo doesn't already have and leaves the
 rest alone.
 
-Then read what the repo already has (its README, any docs, the code
-layout) before the interview, and use it to suggest answers.
+**Then read the repo properly** before the interview: its README and any
+docs, the manifests (`package.json`, `pyproject.toml`, …), the folder
+layout, the test setup, CI files, and the recent `git log`. Summarise it in
+a few lines ("This looks like a Python CLI with pytest and no CI") and ask
+the user to confirm or correct. Keep what you learned: the interview, the
+sizing and step 6b use it, so don't re-ask what the repo already answers.
 
 ## 3. Vision interview
+
+**Existing repo:** the vision records *what it is*, not what it should be.
+Take every suggested answer from what you read in step 2. Skip "Why build
+it" if the README already answers it.
 
 Fill in `<folder>\docs\00-vision.md` with the user, one section at a time,
 in this order:
@@ -166,6 +174,10 @@ trade-offs, revisit-if), in the format the doc's template gives.
 
 Not every project needs every doc. Decide which ones apply — **propose,
 never decide silently.**
+
+**Existing repo:** work out the answers from the code first (dependencies,
+secrets, network calls, outside input, a UI, paid services) and propose
+them. Ask only what the code can't tell you, such as duration.
 
 **Ask** (skip anything the vision interview already answered; one question
 per message, short):
@@ -233,7 +245,9 @@ Show the user the finished `00-vision.md` and the summaries.
 
 ## 6. Small projects: draft docs 01–04
 
-**Standard projects skip this step** — go to step 7.
+**Standard projects skip this step** — go to step 7. **Existing repos skip
+it too** — do step 6b instead; requirements aren't backfilled for code that
+already exists.
 
 For a **Small** project, don't stop at the vision. Ask only what's still
 missing for `01`–`04` — a few questions: the main thing it does, its key
@@ -253,6 +267,30 @@ pass, light versions:
 Show a short summary of all four and ask: **"Is this OK?"** Write the files
 only on a yes; change what the user asks for first. Add new terms to
 `docs\11-glossary.md`.
+
+## 6b. Existing repos: record what exists, then what next
+
+Only for an existing GitHub repo. Standard and Small projects skip this.
+
+1. **Stack: detect and record, don't recommend.** Fill
+   `docs\03-tech-stack.md` and the Commands table in `AGENTS.md` from what
+   the repo has (run, test, lint and format commands from the manifest or
+   README). Add one entry to `docs\05-decisions-log.md`: "Existing stack,
+   kept as is". Don't offer a 2-3 option comparison. Anything not found
+   stays a placeholder; say which.
+2. **Architecture:** draft `docs\02-architecture.md` from the code layout —
+   a components diagram and a short description. Show it and write it only
+   after the user agrees.
+3. **Baseline:** in `docs\01-requirements.md` and `docs\04-project-plan.md`,
+   add one line saying the project already exists and what it does. Mark
+   Phase 0 done. No stories for existing code.
+4. **What next?** Ask: **"Do you want to brainstorm what to change or build
+   next, or stop here?"**
+   - **Brainstorm:** the same four steps as step 1b, but about the change:
+     what hurts today, what the user wants, constraints. Write nothing
+     until they choose a direction. Then add the options table and decision
+     to `docs\05-decisions-log.md`, and suggest `/breakdown` for it.
+   - **Stop here:** suggest `/breakdown` for whenever they're ready.
 
 ## 7. GitHub
 
@@ -278,5 +316,9 @@ Tell the user:
    and stories, then `/stack` to choose the language and tools.
    **Small:** the first five docs are done — run `/story` for the first
    story.
+   **Existing repo:** run `/breakdown` for the next change (no `/stack`:
+   the existing stack is already recorded). The work is on the
+   `add-project-template` branch; open a PR from it once they're happy with
+   the docs.
 3. A doc marked "not needed" can be turned on later — the agent will
    suggest it when the project grows into it.
