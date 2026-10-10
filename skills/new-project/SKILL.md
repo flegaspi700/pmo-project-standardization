@@ -14,39 +14,50 @@ questions.
 
 ## 1. Basics
 
-Ask for whatever wasn't given:
+**First, ask what they're starting** (always, even if `$ARGUMENTS` has a
+name; one question, three choices):
+  1. **New project — the idea is clear.**
+  2. **New project — brainstorm the idea first.** Nothing is created until
+     they've picked a direction.
+  3. **Add the template to an existing GitHub repo.**
+
+Then, by choice:
+
+**Choices 1 and 2 — new project.** Ask for whatever wasn't given:
 - **Name** of the project
-- **The idea** in one or two sentences
-- **Brainstorm first?** Always ask, one short yes/no, and say "no" changes
-  nothing: "Want to brainstorm this idea before creating the project?" If
-  yes, do step 1b now, before asking anything below.
+- **The idea** in one or two sentences (for choice 2, a rough idea is
+  fine). For choice 2, do step 1b now, before asking anything below.
 - **Where** to create it (default `D:\Projects`)
-- **Hosting** — where will the project live? Offer three choices and
+- **Hosting** — where will the project live? Offer two choices and
   recommend **local**:
   1. **Local only (default)** — git on this machine, no GitHub. Branches
      and commits as usual, but no remote and no PRs.
   2. **New GitHub repo** — create a repo and use the PR workflow. Also ask
      **private or public?** Recommend **private**; say that public means
      anyone can see the code and history, and that it can be changed later.
-  3. **Existing GitHub repo** — let the user pick one. Run
-     `gh repo list --limit 30 --no-archived --source --json nameWithOwner,visibility,pushedAt`
-     and show a numbered list, most recently pushed first: name, private or
-     public, last-push date. Ask: "Pick a number, or paste a URL or
-     `owner/name` for a repo that isn't listed." If `gh` isn't signed in or
-     the list is empty, just ask for the URL. If the repo isn't the user's
-     own (a pasted one under another owner), say that the template will add
-     files to someone else's code, and confirm.
 
-  Remember the answer as `local` (choice 1) or `github` (choices 2 and 3).
-  For choice 3, the folder is the clone, so its name comes from the repo
-  name, not the project name.
+  Remember the answer as `local` or `github`.
 
-Show the folder that will be created — the name lowercased with anything
+**Choice 3 — existing GitHub repo.** Hosting is `github`; don't ask. No name
+or idea is needed up front: the folder is the clone, so its name comes from
+the repo name, and the idea comes from the repo itself (step 2 reads it, and
+the vision interview in step 3 suggests answers from it). Let the user pick
+the repo. Run
+`gh repo list --limit 30 --no-archived --source --json nameWithOwner,visibility,pushedAt`
+and show a numbered list, most recently pushed first: name, private or
+public, last-push date. Ask: "Pick a number, or paste a URL or `owner/name`
+for a repo that isn't listed." If `gh` isn't signed in or the list is empty,
+just ask for the URL. If the repo isn't the user's own (a pasted one under
+another owner), say that the template will add files to someone else's
+code, and confirm. Also ask **where** to put the clone (default
+`D:\Projects`).
+
+For choices 1 and 2, show the folder that will be created — the name lowercased with anything
 that isn't a letter or digit turned into dashes, e.g. "Guess Game!" →
 `D:\Projects\guess-game` — and confirm. If that folder already exists,
 say so and ask for another name or location.
 
-## 1b. Brainstorm (only if the user said yes)
+## 1b. Brainstorm (only for choice 2)
 
 Nothing is created yet, so there is nothing to clean up if the idea is
 dropped. These are the same steps as the project's `/brainstorm` skill,

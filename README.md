@@ -10,9 +10,9 @@ Starter kit for new projects.
 ## Start a new project
 
 **Recommended:** in Claude Code (any folder), type `/new-project`. It asks
-for the name and idea, then asks whether to brainstorm the idea first
-(nothing is created until you've picked a direction), runs
-`new-project.ps1`, then interviews you to fill in the vision doc. It then sizes the project (Small or Standard) and
+what you're starting: a new project, a new project after brainstorming the
+idea first (nothing is created until you've picked a direction), or an
+existing GitHub repo. It then runs `new-project.ps1` and interviews you to fill in the vision doc. It then sizes the project (Small or Standard) and
 proposes which docs are needed; docs you don't need become marked one-line
 stubs. For an existing GitHub repo, it first shows which files it would add
 and which it would keep, and asks before writing anything. For a Small project it also drafts docs 01–04 and asks "Is this OK?".
