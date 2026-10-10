@@ -7,6 +7,8 @@
     replaces the <Project name>, <project-name> and <hosting> placeholders, and
     runs `git init`. Doesn't commit - review and commit yourself.
 
+    -Destination is the parent folder (default: the current folder).
+
     -Hosting says where the project lives: "local" (default - local git only,
     no GitHub steps) or "github" (GitHub Flow with PRs). It's written into
     AGENTS.md, and every workflow doc and skill reads it from there.
@@ -23,7 +25,7 @@
 
 .EXAMPLE
     .\new-project.ps1 -Name "Snack Tracker"
-    # creates D:\Projects\snack-tracker
+    # creates snack-tracker in the current folder
 
 .EXAMPLE
     .\new-project.ps1 -Name "Snack Tracker" -Destination D:\Sandbox
@@ -35,7 +37,7 @@ param(
     [Parameter(Mandatory = $true)]
     [string]$Name,
 
-    [string]$Destination = "D:\Projects",
+    [string]$Destination = (Get-Location).Path,
 
     [ValidateSet("local", "github")]
     [string]$Hosting = "local",
