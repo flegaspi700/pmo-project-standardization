@@ -1,0 +1,45 @@
+# General ignores that apply to any project.
+# Language-specific ignores are added at the bottom in Phase 0, once the
+# stack is chosen (see AGENTS.md -> Choosing the stack).
+
+# --- Secrets and local config ---
+# Never commit real credentials. Commit a .env.example with dummy values
+# instead if the project needs environment variables.
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+secrets/
+
+# --- OS files ---
+.DS_Store
+Thumbs.db
+desktop.ini
+ehthumbs.db
+
+# --- Editors and IDEs ---
+.idea/
+*.swp
+*.swo
+*~
+# Keep shared VS Code settings, ignore personal ones
+.vscode/*
+!.vscode/settings.json
+!.vscode/extensions.json
+!.vscode/launch.json
+!.vscode/tasks.json
+# Personal Claude Code settings (shared skills in .claude/skills are committed)
+.claude/settings.local.json
+
+# --- Logs, temp, and output ---
+*.log
+logs/
+tmp/
+temp/
+build/
+dist/
+out/
+coverage/
+
+# --- Language-specific (added in Phase 0) ---

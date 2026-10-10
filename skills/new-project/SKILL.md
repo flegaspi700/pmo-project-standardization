@@ -1,0 +1,207 @@
+---
+name: new-project
+description: Start a new project from the user's template at D:\Projects\Template — create the folder, then interview the user to fill in the vision doc.
+argument-hint: "[project name]"
+disable-model-invocation: true
+---
+
+Start a new project: $ARGUMENTS
+
+The template lives at `D:\Projects\Template\project-template` and is
+created with `D:\Projects\Template\new-project.ps1`. Work through the steps
+below in order. Keep it conversational: one topic per message, short
+questions.
+
+## 1. Basics
+
+Ask for whatever wasn't given:
+- **Name** of the project
+- **The idea** in one or two sentences
+- **Where** to create it (default `D:\Projects`)
+- **Hosting** — where will the project live? Offer three choices and
+  recommend **local**:
+  1. **Local only (default)** — git on this machine, no GitHub. Branches
+     and commits as usual, but no remote and no PRs.
+  2. **New GitHub repo** — create a repo and use the PR workflow. Also ask
+     **private or public?** Recommend **private**; say that public means
+     anyone can see the code and history, and that it can be changed later.
+  3. **Existing GitHub repo** — ask for its URL (`owner/name` or full URL).
+
+  Remember the answer as `local` (choice 1) or `github` (choices 2 and 3).
+  For choice 3, the folder is the clone, so its name comes from the repo
+  name, not the project name.
+
+Show the folder that will be created — the name lowercased with anything
+that isn't a letter or digit turned into dashes, e.g. "Guess Game!" →
+`D:\Projects\guess-game` — and confirm. If that folder already exists,
+say so and ask for another name or location.
+
+## 2. Create it
+
+Run, in PowerShell:
+
+```
+& "D:\Projects\Template\new-project.ps1" -Name "<name>" -Destination "<destination>" -Hosting <local|github>
+```
+
+The script copies the template, fills in the name, writes the hosting into
+`AGENTS.md`, and runs `git init` on `main`. If it fails, show the error and
+stop. Don't commit anything yet.
+
+**New GitHub repo:** right after the script succeeds, create the repo now,
+so a sign-in problem or a taken name shows up before the interview:
+`gh repo create <folder-name> --<private|public> --source "<folder>" --remote origin`
+(no push yet). Show the repo URL. If it fails, show the error and ask:
+fix it and retry, or carry on locally (then change the `AGENTS.md` line to
+`**Hosting: local**`).
+
+**Existing GitHub repo:** clone first, before anything else. Don't run the
+script until the clone is done —
+`gh repo clone <repo> "<destination>\<folder-name>"` — then run the script
+with `-Name "<repo-name>" -IntoExisting -Hosting github`. It copies only the
+template files the repo doesn't already have and leaves the rest alone. Tell
+the user which files were kept. If the repo already has an `AGENTS.md`,
+don't replace it: add the `**Hosting: github**` section from the template's
+Git section to it, and ask before changing anything else.
+
+Then read what the repo already has (its README, any docs, the code
+layout) before the interview, and use it to suggest answers.
+
+## 3. Vision interview
+
+Fill in `<folder>\docs\00-vision.md` with the user, one section at a time,
+in this order:
+
+1. Problem
+2. Who it's for
+3. Why build it (their honest motivation — it decides what "good enough"
+   means)
+4. Goals — 2-4 outcomes, numbered G1, G2… (outcomes, not features)
+5. Success looks like — measurable where possible
+6. Non-goals
+7. Constraints — time, budget, platform, other
+8. Assumptions and risks
+
+For each section, **suggest** an answer drawn from the idea and earlier
+answers, and let the user accept, edit, or replace it. Never write an
+answer the user didn't confirm. "Skip" leaves that section's placeholder
+for later. Keep the doc to one page.
+
+## 4. Size the project and choose the docs
+
+Not every project needs every doc. Decide which ones apply — **propose,
+never decide silently.**
+
+**Ask** (skip anything the vision interview already answered; one question
+per message, short):
+1. Rough duration — days, weeks, or months?
+2. One main piece, or several that talk to each other?
+3. User interface — **none**, **app or website**, or **game**?
+4. Does it handle secrets, network calls, outside input, or personal data?
+5. Does it cost money (paid service or assets) or have a tight hour
+   budget?
+
+**Propose a size:**
+- **Small** — about two weeks or less, one main piece, no network calls,
+  secrets, or personal data. Gets the fast path in step 6.
+- **Standard** — everything else. Keeps the normal flow (`/breakdown`,
+  `/stack`).
+
+**Then propose which docs are needed**, as a table: doc, status, one-line
+reason. The docs fall in three kinds:
+- **Planning — `00`–`04`.** Always `Active`. Small projects get light
+  versions (step 6).
+- **Rules — `05`, `06`, `07`, `10`, `11`, `13`.** Generic text, used as-is.
+  Always `Active`.
+- **Situational — `08`, `09`, `12`, `14`, `15`, `16`.** `Active` only when
+  the trigger is true, otherwise `Not needed`:
+
+  | Doc | Active when… |
+  |---|---|
+  | `08` prompt log | cheap — keep it, but mark it `Optional` for Small |
+  | `09` status report | it runs longer than ~2 weeks or has more than one phase |
+  | `12` manual tests | it has a UI, is a game, or has anything automated tests can't judge |
+  | `14` security | it has secrets, network calls, dependencies beyond the standard library, outside input, or personal data (the security rules in `AGENTS.md` apply either way) |
+  | `15` accessibility | it has a UI (follow "Does this apply?" in the doc: keep the right section, drop the other) |
+  | `16` budget | money or paid services are involved, or hours are tightly limited |
+
+The user can accept the table or flip any single doc. Then apply it:
+- **`Not needed` docs are not deleted.** Replace the whole file with a stub
+  so every reference to it stays valid:
+
+  ```
+  # <Original title>
+
+  > **Not needed for this project (<one-line reason>).** Optional — add
+  > content here, or restore the full version from
+  > `D:\Projects\Template\project-template\docs\<file>`, if the project
+  > grows.
+  ```
+- Fill in the **Doc status** table in `AGENTS.md` (Active / Optional /
+  Not needed, with the reason), and append "(optional)" or "(not needed)"
+  to those docs' entries in the `README.md` doc list.
+- If `15` is `Not needed` (no UI): add "No user interface — accessibility
+  not applicable" to the vision's Non-goals and delete the NFR3 row in
+  `docs\01-requirements.md`. If it applies, set NFR3 to the matching
+  target.
+
+## 5. Fill in the summaries
+
+From the answers, replace the placeholders in:
+- `README.md` — the one-or-two-sentence description, and "Project target
+  (current)"
+- `AGENTS.md` — the "What this project is" paragraph
+- `docs\16-budget.md` → Limits, and NFR6 — from the budget constraint, if
+  given and `16` is `Active`
+
+Show the user the finished `00-vision.md` and the summaries.
+
+## 6. Small projects: draft docs 01–04
+
+**Standard projects skip this step** — go to step 7.
+
+For a **Small** project, don't stop at the vision. Ask only what's still
+missing for `01`–`04` — a few questions: the main thing it does, its key
+inputs and outputs, any language preference. Then draft all four in one
+pass, light versions:
+- `01-requirements.md` — one epic (with **Serves:** a goal), a few
+  features, and stories with Given/When/Then criteria for the current phase
+  only, including empty and worst-case inputs
+- `02-architecture.md` — system context and components diagrams only; add
+  other diagrams only if the project needs them
+- `03-tech-stack.md` — a recommended stack (default Python; mention the
+  alternatives only if the choice is really contested), and fill in the
+  matching entries in `docs\05-decisions-log.md` and the Commands table in
+  `AGENTS.md`
+- `04-project-plan.md` — a single phase and a short Gantt chart
+
+Show a short summary of all four and ask: **"Is this OK?"** Write the files
+only on a yes; change what the user asks for first. Add new terms to
+`docs\11-glossary.md`.
+
+## 7. GitHub
+
+By hosting choice:
+- **Local only:** do nothing. Don't mention GitHub again, don't offer to
+  create a repo, and leave all GitHub items in the docs unchecked (they're
+  marked "GitHub only"). If the user wants GitHub later, it's one step —
+  `docs/13-git-workflow.md` → Switching.
+- **New GitHub repo:** the repo already exists (step 2). Make the first
+  commit (`chore: start project from template`), then
+  `git push -u origin main`, and show the repo URL again.
+- **Existing GitHub repo:** the clone already has its remote. Ask before
+  making the first commit (`chore: add project template`) and pushing —
+  on a branch, not `main`, if the repo's `main` already has history.
+
+## 8. Next steps
+
+Tell the user:
+1. Open a new terminal in the project and start Claude Code there, so its
+   `AGENTS.md` and project commands load:
+   `cd "<folder>"` then `claude`
+2. **Standard:** run `/breakdown` to turn the vision into epics, features,
+   and stories, then `/stack` to choose the language and tools.
+   **Small:** the first five docs are done — run `/story` for the first
+   story.
+3. A doc marked "not needed" can be turned on later — the agent will
+   suggest it when the project grows into it.
