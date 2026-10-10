@@ -15,6 +15,9 @@
     <Destination>\<folder-name>: files that don't exist yet are copied, files
     that do are left alone, and git init is skipped.
 
+    -DryRun (only with -IntoExisting) lists what would be added (ADD) and
+    what would be kept (KEEP) and changes nothing.
+
     Lives outside project-template on purpose, so it isn't copied into every
     new project.
 
@@ -37,10 +40,16 @@ param(
     [ValidateSet("local", "github")]
     [string]$Hosting = "local",
 
-    [switch]$IntoExisting
+    [switch]$IntoExisting,
+
+    [switch]$DryRun
 )
 
 $ErrorActionPreference = "Stop"
+
+if ($DryRun -and -not $IntoExisting) {
+    throw "-DryRun only works with -IntoExisting."
+}
 
 $templateDir = Join-Path $PSScriptRoot "project-template"
 
@@ -67,13 +76,21 @@ if ($IntoExisting) {
     Get-ChildItem -Path $templateFull -Recurse -File | ForEach-Object {
         $relative = $_.FullName.Substring($templateFull.Length).TrimStart([char]92)
         $dest = Join-Path $targetDir $relative
-        if (Test-Path $dest) {
+        if ($DryRun) {
+            $verb = if (Test-Path $dest) { "KEEP" } else { "ADD " }
+            Write-Host "$verb $relative"
+        } elseif (Test-Path $dest) {
             Write-Warning "Kept existing $relative"
         } else {
             New-Item -ItemType Directory -Force -Path (Split-Path $dest) | Out-Null
             Copy-Item -Path $_.FullName -Destination $dest
             $copied += $dest
         }
+    }
+    if ($DryRun) {
+        Write-Host ""
+        Write-Host "Dry run - nothing was changed."
+        return
     }
 } else {
     if (Test-Path $targetDir) {

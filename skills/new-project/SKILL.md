@@ -88,12 +88,33 @@ fix it and retry, or carry on locally (then change the `AGENTS.md` line to
 
 **Existing GitHub repo:** clone first, before anything else. Don't run the
 script until the clone is done —
-`gh repo clone <repo> "<destination>\<folder-name>"` — then run the script
-with `-Name "<repo-name>" -IntoExisting -Hosting github`. It copies only the
-template files the repo doesn't already have and leaves the rest alone. Tell
-the user which files were kept. If the repo already has an `AGENTS.md`,
-don't replace it: add the `**Hosting: github**` section from the template's
-Git section to it, and ask before changing anything else.
+`gh repo clone <repo> "<destination>\<folder-name>"`. A clone doesn't change
+the repo, so it's safe to do before asking.
+
+Then **preview and confirm before anything is written:**
+1. Run the script with `-DryRun`:
+   `& "D:\Projects\Template\new-project.ps1" -Name "<repo-name>" -IntoExisting -Hosting github -DryRun`
+   It prints `ADD` or `KEEP` per file and changes nothing.
+2. Show the result grouped, not as a long list: "Will add N files:
+   `docs/` (17), `.claude/skills/` (10), `.github/`, `AGENTS.md`, …" and
+   "Will keep M files your repo already has: …".
+3. Say plainly: the template adds docs, workflow commands and rules to this
+   repo. Files it already has are never overwritten. Nothing is committed
+   or pushed until the user says so.
+4. Ask: **"Go ahead and add these to the clone?"** Offer yes, no, or "let me
+   pick" (skip some groups, e.g. no `.claude/skills/`). On no, stop and
+   say the clone was left as it is. On "let me pick", run the script as
+   below, then delete the files of the skipped groups.
+5. If `AGENTS.md` or `.github/pull_request_template.md` is on the keep
+   list, say the template's version won't be applied. For `AGENTS.md`, offer
+   to add only the `**Hosting: github**` section from the template's Git
+   section, and ask before changing anything else in it.
+
+On a yes, **create a branch first** (`git -C "<folder>" switch -c
+add-project-template`) so `main` stays clean, then run the script for real
+with `-Name "<repo-name>" -IntoExisting -Hosting github` (no `-DryRun`). It
+copies only the template files the repo doesn't already have and leaves the
+rest alone.
 
 Then read what the repo already has (its README, any docs, the code
 layout) before the interview, and use it to suggest answers.
@@ -225,8 +246,8 @@ By hosting choice:
   commit (`chore: start project from template`), then
   `git push -u origin main`, and show the repo URL again.
 - **Existing GitHub repo:** the clone already has its remote. Ask before
-  making the first commit (`chore: add project template`) and pushing —
-  on a branch, not `main`, if the repo's `main` already has history.
+  making the first commit (`chore: add project template`) and pushing the
+  `add-project-template` branch from step 2 — never `main`.
 
 ## 8. Next steps
 
