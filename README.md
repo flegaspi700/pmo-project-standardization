@@ -7,8 +7,6 @@ Starter kit for new projects.
 | `project-template/` | The template. Everything in it is copied into each new project — docs, `AGENTS.md`, workflow commands (`.claude/skills/`), PR template, `.gitignore`. |
 | `new-project.ps1` | Copies `project-template` to a new folder, fills in the name and hosting (`-Hosting local\|github`, default local), runs `git init` on `main`. `-IntoExisting` adds the template to a repo you already cloned. |
 | `skills/new-project/` | Source of the `/new-project` Claude Code command (user level). |
-| `game-agent/` | Not in this repo. The original planning docs this template was built from live in [flegaspi700/game-agent](https://github.com/flegaspi700/game-agent) as a filled-in example. |
-
 ## Start a new project
 
 **Recommended:** in Claude Code (any folder), type `/new-project`. It asks
