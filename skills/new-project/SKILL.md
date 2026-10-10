@@ -17,6 +17,9 @@ questions.
 Ask for whatever wasn't given:
 - **Name** of the project
 - **The idea** in one or two sentences
+- **Brainstorm first?** Always ask, one short yes/no, and say "no" changes
+  nothing: "Want to brainstorm this idea before creating the project?" If
+  yes, do step 1b now, before asking anything below.
 - **Where** to create it (default `D:\Projects`)
 - **Hosting** — where will the project live? Offer three choices and
   recommend **local**:
@@ -35,6 +38,24 @@ Show the folder that will be created — the name lowercased with anything
 that isn't a letter or digit turned into dashes, e.g. "Guess Game!" →
 `D:\Projects\guess-game` — and confirm. If that folder already exists,
 say so and ask for another name or location.
+
+## 1b. Brainstorm (only if the user said yes)
+
+Nothing is created yet, so there is nothing to clean up if the idea is
+dropped. Follow steps 2-5 of
+`D:\Projects\Template\project-template\.claude\skills\brainstorm\SKILL.md`
+(questions first, 3-4 directions with a simpler one, the riskiest
+assumption, a recommendation, wait for the user's choice), but **write no
+files**. Keep in mind:
+- the chosen direction and why
+- the options table (for the decisions log)
+- the riskiest assumption and its cheap test
+
+If the user drops the idea, stop: no folder was made. If they pick a
+direction, update the project name and idea to match it, then carry on with
+the questions in step 1 (where, hosting). In step 3, use the brainstorm
+answers as the suggestions for each vision section, still one section at a
+time and confirmed by the user.
 
 ## 2. Create it
 
@@ -86,6 +107,10 @@ For each section, **suggest** an answer drawn from the idea and earlier
 answers, and let the user accept, edit, or replace it. Never write an
 answer the user didn't confirm. "Skip" leaves that section's placeholder
 for later. Keep the doc to one page.
+
+If step 1b ran, also add the brainstorm's entry to
+`<folder>\docs\05-decisions-log.md` (options table, decision, why,
+trade-offs, revisit-if), in the format the doc's template gives.
 
 ## 4. Size the project and choose the docs
 
