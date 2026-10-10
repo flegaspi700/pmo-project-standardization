@@ -177,22 +177,33 @@ never decide silently.**
 
 **Existing repo:** work out the answers from the code first (dependencies,
 secrets, network calls, outside input, a UI, paid services) and propose
-them. Ask only what the code can't tell you, such as duration.
+them. Ask only what the code can't tell you.
 
-**Ask** (skip anything the vision interview already answered; one question
-per message, short):
-1. Rough duration — days, weeks, or months?
-2. One main piece, or several that talk to each other?
+**Infer first, ask only what's left.** The idea and the vision interview
+usually answer most of these. Work out your answers, say what you assumed,
+and ask only about what's still unclear (one question per message, short):
+1. One main piece, or several that talk to each other?
+2. Single phase, or several parts built in phases? If you can't tell, ask:
+   "Is this one piece built in one go, or several parts built in phases?"
 3. User interface — **none**, **app or website**, or **game**?
 4. Does it handle secrets, network calls, outside input, or personal data?
-5. Does it cost money (paid service or assets) or have a tight hour
-   budget?
+5. Does it cost money (paid service or assets)? Ask about a time budget
+   only if the user mentioned a limit; it's their own limit and isn't used
+   for sizing.
 
-**Propose a size:**
-- **Small** — about two weeks or less, one main piece, no network calls,
-  secrets, or personal data. Gets the fast path in step 6.
-- **Standard** — everything else. Keeps the normal flow (`/breakdown`,
-  `/stack`).
+Don't ask how long it will take. When AI writes most of the code, calendar
+time says little; scope does.
+
+**Propose a size, with the reason in one line** (e.g. "Small: one script,
+single phase, no network"). The user accepts or flips it:
+- **Small** — one main piece, a single phase, no network calls, secrets, or
+  personal data. Gets the fast path in step 6.
+- **Standard** — everything else, including anything with more than one
+  phase. Keeps the normal flow (`/breakdown`, `/stack`).
+
+Size changes how much planning is written up front, **not how the code is
+built**: test-first, story IDs, the Definition of Done and approval per
+story apply to every project, Small included.
 
 **Then propose which docs are needed**, as a table: doc, status, one-line
 reason. The docs fall in three kinds:
@@ -206,7 +217,7 @@ reason. The docs fall in three kinds:
   | Doc | Active when… |
   |---|---|
   | `08` prompt log | cheap — keep it, but mark it `Optional` for Small |
-  | `09` status report | it runs longer than ~2 weeks or has more than one phase |
+  | `09` status report | it has more than one phase |
   | `12` manual tests | it has a UI, is a game, or has anything automated tests can't judge |
   | `14` security | it has secrets, network calls, dependencies beyond the standard library, outside input, or personal data (the security rules in `AGENTS.md` apply either way) |
   | `15` accessibility | it has a UI (follow "Does this apply?" in the doc: keep the right section, drop the other) |
