@@ -42,11 +42,21 @@ say so and ask for another name or location.
 ## 1b. Brainstorm (only if the user said yes)
 
 Nothing is created yet, so there is nothing to clean up if the idea is
-dropped. Follow steps 2-5 of
-`D:\Projects\Template\project-template\.claude\skills\brainstorm\SKILL.md`
-(questions first, 3-4 directions with a simpler one, the riskiest
-assumption, a recommendation, wait for the user's choice), but **write no
-files**. Keep in mind:
+dropped. These are the same steps as the project's `/brainstorm` skill,
+but **write no files**:
+
+1. **Ask before proposing.** A few questions at a time: who it's for, what
+   problem it solves, why now, and the constraints (time, money, skills).
+   Don't guess the gaps.
+2. Offer **3-4 distinct directions** as a table: direction, pros, cons,
+   rough effort. Always include a smaller or simpler one than the user
+   first described.
+3. Challenge the assumptions. Name the **riskiest one** and a cheap way to
+   test it before building anything.
+4. Recommend one direction and name the trade-off. **Wait for the user to
+   choose.**
+
+Keep in mind:
 - the chosen direction and why
 - the options table (for the decisions log)
 - the riskiest assumption and its cheap test
