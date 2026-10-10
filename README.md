@@ -12,8 +12,9 @@ Starter kit for new projects.
 ## Start a new project
 
 **Recommended:** in Claude Code (any folder), type `/new-project`. It asks
-for the name and idea, runs `new-project.ps1`, then interviews you to fill
-in the vision doc. It then sizes the project (Small or Standard) and
+for the name and idea, then asks whether to brainstorm the idea first
+(nothing is created until you've picked a direction), runs
+`new-project.ps1`, then interviews you to fill in the vision doc. It then sizes the project (Small or Standard) and
 proposes which docs are needed; docs you don't need become marked one-line
 stubs. For a Small project it also drafts docs 01–04 and asks "Is this OK?".
 
