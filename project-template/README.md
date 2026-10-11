@@ -4,15 +4,16 @@
 
 > **Using this template:** start the project with `/new-project` in Claude
 > Code — it creates the folder and interviews you for the vision doc. (Or
-> run `D:\Projects\Template\new-project.ps1 -Name "<Project name>"` and fill
+> run `<template-dir>\new-project.ps1 -Name "<Project name>"` and fill
 > in `docs/00-vision.md` yourself.) Then `/breakdown`, `/stack`, and the
 > rest of `docs/00` → `docs/04` (vision, requirements, architecture, tech
 > stack, plan). Search for `<` to find remaining placeholders. Delete this
 > note when done.
 >
 > AI agents (Claude Code, Codex, Cursor, ...) read `AGENTS.md` automatically.
-> Don't add a `CLAUDE.md` here or in any parent folder (e.g. `D:\Projects`):
-> if one exists, Claude Code reads it instead and ignores `AGENTS.md`.
+> Don't add a `CLAUDE.md` here or in any parent folder (e.g. the folder
+> that holds all your projects): if one exists, Claude Code reads it
+> instead and ignores `AGENTS.md`.
 
 ## Docs
 

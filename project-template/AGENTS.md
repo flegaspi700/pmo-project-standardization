@@ -38,7 +38,7 @@ to-do. **Optional** = kept, but low priority.
 Not-needed doc covers — the first network call, secret, or dependency
 (`14`), a UI (`15`, `12`), a cost (`16`), or a second phase (`09`) — say so
 and suggest turning the doc on: restore it from
-`D:\Projects\Template\project-template\docs\` and update this table. Don't
+`<template-dir>\project-template\docs\` and update this table. Don't
 do it silently.
 
 ## Learning mode
