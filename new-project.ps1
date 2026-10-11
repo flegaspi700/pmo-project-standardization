@@ -3,8 +3,9 @@
     Creates a new project from the project-template folder.
 
 .DESCRIPTION
-    Copies D:\Projects\Template\project-template to <Destination>\<folder-name>,
-    replaces the <Project name>, <project-name> and <hosting> placeholders, and
+    Copies the project-template folder next to this script to <Destination>\<folder-name>,
+    replaces the <Project name>, <project-name>, <hosting> and <template-dir>
+    placeholders (<template-dir> = the folder this script is in), and
     runs `git init`. Doesn't commit - review and commit yourself.
 
     -Destination is the parent folder (default: the current folder).
@@ -109,7 +110,7 @@ $utf8NoBom = New-Object System.Text.UTF8Encoding($false)
 # Only the files copied in just now - never an existing repo's own files.
 $copied | Where-Object { $_ -like '*.md' } | ForEach-Object {
     $text = [System.IO.File]::ReadAllText($_, $utf8NoBom)
-    $updated = $text.Replace('<Project name>', $Name).Replace('<project-name>', $folderName).Replace('<hosting>', $Hosting)
+    $updated = $text.Replace('<Project name>', $Name).Replace('<project-name>', $folderName).Replace('<hosting>', $Hosting).Replace('<template-dir>', $PSScriptRoot)
     if ($updated -ne $text) {
         [System.IO.File]::WriteAllText($_, $updated, $utf8NoBom)
     }

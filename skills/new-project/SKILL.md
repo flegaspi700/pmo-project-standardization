@@ -1,14 +1,24 @@
 ---
 name: new-project
-description: Start a new project from the user's template at D:\Projects\Template — create the folder, then interview the user to fill in the vision doc.
+description: Start a new project from the user's project template — create the folder, then interview the user to fill in the vision doc.
 argument-hint: "[project name]"
 disable-model-invocation: true
 ---
 
 Start a new project: $ARGUMENTS
 
-The template lives at `D:\Projects\Template\project-template` and is
-created with `D:\Projects\Template\new-project.ps1`. Work through the steps
+**Find the template folder first** (called `<template-dir>` below). This
+skill is installed as a junction to `<template-dir>\skills\new-project`, so
+resolve it in PowerShell:
+
+```
+$s = Get-Item "$env:USERPROFILE\.claude\skills\new-project"; $d = if ($s.Target) { @($s.Target)[0] } else { $s.FullName }; Split-Path $d | Split-Path
+```
+
+Check that `<template-dir>\new-project.ps1` exists. If it doesn't, ask the
+user where the template folder is. The template is
+`<template-dir>\project-template`, created with
+`<template-dir>\new-project.ps1`. Work through the steps
 below in order. Keep it conversational: one topic per message, short
 questions.
 
@@ -60,8 +70,8 @@ say so and ask for another name or location.
 
 **Default location:** the current working directory of this session (the
 folder `claude` was started in). Show the full path, e.g. "Where should it
-go? Default: `D:\Projects`". If that folder is the template folder
-(`D:\Projects\Template`) or inside it, or is itself inside a git repo,
+go? Default: `<current folder>`". If that folder is the template folder
+(`<template-dir>`) or inside it, or is itself inside a git repo,
 say so and don't offer it as the default — ask for a location instead, so
 a project isn't created inside another repo.
 
@@ -98,7 +108,7 @@ time and confirmed by the user.
 Run, in PowerShell:
 
 ```
-& "D:\Projects\Template\new-project.ps1" -Name "<name>" -Destination "<destination>" -Hosting <local|github>
+& "<template-dir>\new-project.ps1" -Name "<name>" -Destination "<destination>" -Hosting <local|github>
 ```
 
 The script copies the template, fills in the name, writes the hosting into
@@ -120,7 +130,7 @@ say so and ask: use that copy as it is, or pick another destination.
 
 Then **preview and confirm before anything is written:**
 1. Run the script with `-DryRun`:
-   `& "D:\Projects\Template\new-project.ps1" -Name "<repo-name>" -Destination "<destination>" -IntoExisting -Hosting github -DryRun`
+   `& "<template-dir>\new-project.ps1" -Name "<repo-name>" -Destination "<destination>" -IntoExisting -Hosting github -DryRun`
    It prints `ADD` or `KEEP` per file and changes nothing.
 2. Show the result grouped, not as a long list: "Will add N files:
    `docs/` (17), `.claude/skills/` (10), `.github/`, `AGENTS.md`, …" and
@@ -241,7 +251,7 @@ The user can accept the table or flip any single doc. Then apply it:
 
   > **Not needed for this project (<one-line reason>).** Optional — add
   > content here, or restore the full version from
-  > `D:\Projects\Template\project-template\docs\<file>`, if the project
+  > `<template-dir>\project-template\docs\<file>`, if the project
   > grows.
   ```
 - Fill in the **Doc status** table in `AGENTS.md` (Active / Optional /
