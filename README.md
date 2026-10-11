@@ -8,6 +8,7 @@ Starter kit for new projects.
 | `new-project.ps1` | Copies `project-template` to a new folder, fills in the name and hosting (`-Hosting local\|github`, default local), runs `git init` on `main`. `-IntoExisting` adds the template to a repo you already cloned. |
 | `skills/new-project/` | Source of the `/new-project` Claude Code command (user level). |
 | `tests/check-template.ps1` | Checks the template still produces a working project (placeholders filled, links resolve, skill frontmatter valid, brainstorm steps in sync). Run it before opening a PR. |
+| `ideas/` | Ideas captured for later brainstorming (not part of the template). |
 | `CHANGELOG.md` | What changed in each version (git tags `v1.0.0`, ...). |
 ## Start a new project
 
