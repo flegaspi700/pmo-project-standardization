@@ -1,0 +1,131 @@
+{
+  "version": 1,
+  "levels": {
+    "reporting": ["C4"],
+    "adopted": ["C1", "C2", "C3"]
+  },
+  "checks": [
+    {
+      "id": "C1",
+      "title": "AGENTS.md has the Doc status table",
+      "severity": "required",
+      "since": "v1.0.0",
+      "required_from": "2026-11-09",
+      "kind": "contains",
+      "path": "AGENTS.md",
+      "pattern": "(?m)^## Doc status",
+      "fix": "Add the template's AGENTS.md (/new-project, existing repo option)."
+    },
+    {
+      "id": "C2",
+      "title": "AGENTS.md has the Hosting line",
+      "severity": "required",
+      "since": "v1.0.0",
+      "required_from": "2026-11-09",
+      "kind": "contains",
+      "path": "AGENTS.md",
+      "pattern": "\\*\\*Hosting: (local|github)\\*\\*",
+      "fix": "Add '**Hosting: local**' or '**Hosting: github**' to AGENTS.md -> Git."
+    },
+    {
+      "id": "C3",
+      "title": "Docs 00-16 all exist (stubs count)",
+      "severity": "required",
+      "since": "v1.0.0",
+      "required_from": "2026-11-09",
+      "kind": "exists",
+      "paths": [
+        "docs/00-vision.md",
+        "docs/01-requirements.md",
+        "docs/02-architecture.md",
+        "docs/03-tech-stack.md",
+        "docs/04-project-plan.md",
+        "docs/05-decisions-log.md",
+        "docs/06-coding-conventions.md",
+        "docs/07-testing-checklist.md",
+        "docs/08-prompt-log.md",
+        "docs/09-status-report.md",
+        "docs/10-session-log.md",
+        "docs/11-glossary.md",
+        "docs/12-manual-tests.md",
+        "docs/13-git-workflow.md",
+        "docs/14-security.md",
+        "docs/15-accessibility.md",
+        "docs/16-budget.md"
+      ],
+      "fix": "Copy the missing docs from the template; mark unneeded ones as one-line stubs."
+    },
+    {
+      "id": "C4",
+      "title": "portfolio.json exists and fits the schema",
+      "severity": "required",
+      "since": "v1.3.0",
+      "required_from": "2026-11-24",
+      "kind": "schema",
+      "path": "portfolio.json",
+      "schema": "portfolio.schema.json",
+      "fix": "Copy project-template/portfolio.json, fill in name, owner and sponsor, then run /report."
+    },
+    {
+      "id": "C5",
+      "title": "AGENTS.md has the UTF-8 rule",
+      "severity": "optional",
+      "since": "v1.1.0",
+      "required_from": null,
+      "kind": "contains",
+      "path": "AGENTS.md",
+      "pattern": "UTF-8 without a BOM",
+      "fix": "Copy the 'Text files are UTF-8 without a BOM' paragraph from the template's AGENTS.md."
+    },
+    {
+      "id": "C6",
+      "title": "AGENTS.md has a Template version line",
+      "severity": "optional",
+      "since": "v1.2.0",
+      "required_from": null,
+      "kind": "contains",
+      "path": "AGENTS.md",
+      "pattern": "Template version: v\\d",
+      "fix": "Add '**Template version: vX.Y.Z**' near the top of AGENTS.md."
+    },
+    {
+      "id": "C7",
+      "title": "PR template present (GitHub-hosted projects)",
+      "severity": "optional",
+      "since": "v1.0.0",
+      "required_from": null,
+      "kind": "exists",
+      "paths": [".github/pull_request_template.md"],
+      "applies_if": { "path": "AGENTS.md", "pattern": "\\*\\*Hosting: github\\*\\*" },
+      "fix": "Copy .github/pull_request_template.md from the template."
+    },
+    {
+      "id": "W1",
+      "title": "No CLAUDE.md that hides AGENTS.md",
+      "severity": "warning",
+      "since": "v1.0.0",
+      "required_from": null,
+      "kind": "contains",
+      "path": "CLAUDE.md",
+      "if_exists": true,
+      "pattern": "AGENTS\\.md",
+      "fix": "Merge anything useful into AGENTS.md, then make CLAUDE.md a one-line pointer: @AGENTS.md"
+    },
+    {
+      "id": "W2",
+      "title": "Planning docs (00, 02-04) have no unfilled placeholders",
+      "severity": "warning",
+      "since": "v1.0.0",
+      "required_from": null,
+      "kind": "absent",
+      "paths": [
+        "docs/00-vision.md",
+        "docs/02-architecture.md",
+        "docs/03-tech-stack.md",
+        "docs/04-project-plan.md"
+      ],
+      "pattern": "<[A-Za-z][^<>`\\r\\n]*\\s[^<>`\\r\\n]*>",
+      "fix": "Fill in the <...> placeholders (run /breakdown, /stack, or /report)."
+    }
+  ]
+}
