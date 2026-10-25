@@ -10,6 +10,7 @@
       - every SKILL.md has frontmatter with a name matching its folder and
         a description
       - the brainstorm steps copied into /new-project still match /brainstorm
+      - every file is valid UTF-8 with no garbled characters
 
     Run it before opening a PR: .\tests\check-template.ps1
     Exits 1 if anything fails.
@@ -138,9 +139,31 @@ foreach ($step in $steps) {
     }
 }
 
+# --- 5. Encoding -------------------------------------------------------
+# Every file must be valid UTF-8 and free of mojibake, the trace left when
+# UTF-8 is read as Windows-1252 and saved back as UTF-8 (an em dash becomes
+# a-circumflex, euro sign, right quote). Built from char codes so this
+# script stays ASCII.
+$strictUtf8 = New-Object System.Text.UTF8Encoding($false, $true)
+$mojibake = [string][char]0x00E2 + [char]0x20AC
+$textFiles = @(Get-ChildItem -Path $root -Recurse -File -Force | Where-Object { $_.FullName -notmatch '[\\/]\.git[\\/]' })
+foreach ($file in $textFiles) {
+    $relative = $file.FullName.Substring($root.Length + 1)
+    try {
+        $text = $strictUtf8.GetString([System.IO.File]::ReadAllBytes($file.FullName))
+    }
+    catch {
+        Fail "${relative}: not valid UTF-8"
+        continue
+    }
+    if ($text.Contains($mojibake)) {
+        Fail "${relative}: contains garbled characters (UTF-8 read as Windows-1252 and saved)"
+    }
+}
+
 # --- Result --------------------------------------------------------------
 if ($script:failures.Count -gt 0) {
     Write-Host "`n$($script:failures.Count) check(s) failed." -ForegroundColor Red
     exit 1
 }
-Write-Host "All checks passed ($($mdFiles.Count) docs, $($skillFiles.Count) skills, $($steps.Count) brainstorm steps)." -ForegroundColor Green
+Write-Host "All checks passed ($($mdFiles.Count) docs, $($skillFiles.Count) skills, $($steps.Count) brainstorm steps, $($textFiles.Count) files encoding-checked)." -ForegroundColor Green
