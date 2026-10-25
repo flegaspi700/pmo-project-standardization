@@ -1,0 +1,101 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/flegaspi700/pmo-project-standardization/main/spec/portfolio.schema.json",
+  "title": "portfolio.json",
+  "description": "What a project reports to the portfolio. See spec/reporting-contract.md.",
+  "type": "object",
+  "required": ["schema", "name", "lifecycle", "health"],
+  "additionalProperties": false,
+  "properties": {
+    "$schema": { "type": "string" },
+    "schema": { "const": 1, "description": "Contract version. Bumped only for breaking changes." },
+    "name": { "type": "string", "minLength": 1 },
+    "summary": { "type": ["string", "null"], "description": "One sentence: what it does and for whom." },
+    "owner": { "type": ["string", "null"], "description": "Accountable for delivery day to day." },
+    "sponsor": { "type": ["string", "null"], "description": "Senior person who backs the project and decides call-outs." },
+    "program": { "type": ["string", "null"], "description": "Group the portfolio view rolls this project up under." },
+    "lifecycle": { "enum": ["planning", "active", "on-hold", "done", "archived"] },
+    "health": { "enum": ["green", "amber", "red", "not-reported"] },
+    "health_reason": { "type": ["string", "null"] },
+    "phase": {
+      "type": ["object", "null"],
+      "required": ["current", "name"],
+      "additionalProperties": false,
+      "properties": {
+        "current": { "type": "integer", "minimum": 0 },
+        "name": { "type": "string" }
+      }
+    },
+    "progress": {
+      "type": ["object", "null"],
+      "required": ["stories_done", "stories_total", "as_of"],
+      "additionalProperties": false,
+      "properties": {
+        "stories_done": { "type": "integer", "minimum": 0 },
+        "stories_total": { "type": "integer", "minimum": 0 },
+        "open_bugs": { "type": ["integer", "null"], "minimum": 0 },
+        "as_of": { "$ref": "#/$defs/date" }
+      }
+    },
+    "next_milestone": {
+      "type": ["object", "null"],
+      "required": ["name", "date"],
+      "additionalProperties": false,
+      "properties": {
+        "name": { "type": "string" },
+        "date": { "$ref": "#/$defs/date" }
+      }
+    },
+    "risks": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["title", "severity"],
+        "additionalProperties": false,
+        "properties": {
+          "title": { "type": "string" },
+          "severity": { "enum": ["high", "medium", "low"] },
+          "mitigation": { "type": ["string", "null"] }
+        }
+      }
+    },
+    "blockers": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["title"],
+        "additionalProperties": false,
+        "properties": {
+          "title": { "type": "string" },
+          "since": { "oneOf": [{ "$ref": "#/$defs/date" }, { "type": "null" }] },
+          "needs": { "type": ["string", "null"], "description": "What would unblock it, and from whom." }
+        }
+      }
+    },
+    "callouts": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "What leadership needs to know or decide."
+    },
+    "budget": {
+      "type": ["object", "null"],
+      "required": ["month", "currency", "spend"],
+      "additionalProperties": false,
+      "properties": {
+        "month": { "type": "string", "pattern": "^\\d{4}-\\d{2}$" },
+        "currency": { "type": "string", "pattern": "^[A-Z]{3}$" },
+        "spend": { "type": "number", "minimum": 0 },
+        "limit": { "type": ["number", "null"], "minimum": 0 },
+        "hours_phase": { "type": ["number", "null"], "minimum": 0 },
+        "hours_phase_estimate": { "type": ["number", "null"], "minimum": 0 }
+      }
+    },
+    "updated": {
+      "oneOf": [{ "$ref": "#/$defs/date" }, { "type": "null" }],
+      "description": "Last time a person reviewed health, risks and call-outs (set by /report)."
+    }
+  },
+  "$defs": {
+    "date": { "type": "string", "pattern": "^\\d{4}-\\d{2}-\\d{2}$" }
+  }
+}

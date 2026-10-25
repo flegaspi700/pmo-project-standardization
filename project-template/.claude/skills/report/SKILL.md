@@ -29,3 +29,10 @@ budget lines if `16` is `Not needed`.)
    docs.
 7. Write the report at the top of `docs/09-status-report.md` using its
    template.
+8. Update `portfolio.json` (rules: the reporting contract linked in
+   `AGENTS.md` → Portfolio reporting): `health` and `health_reason`, `risks`,
+   `blockers` and `callouts` from the user's answers in step 5; `phase`,
+   `next_milestone` and `progress` from the docs; `budget` from step 3 if
+   `16` is `Active`, else `null`. Ask whether `lifecycle` changed
+   (`planning`, `active`, `on-hold`, `done`, `archived`). Set `updated` to
+   today. Do this even when `09` is `Not needed`.

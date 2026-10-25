@@ -270,6 +270,12 @@ From the answers, replace the placeholders in:
 - `AGENTS.md` — the "What this project is" paragraph
 - `docs\16-budget.md` → Limits, and NFR6 — from the budget constraint, if
   given and `16` is `Active`
+- `portfolio.json` — `summary` (one sentence from the vision). Ask who the
+  **owner** (accountable day to day) and **sponsor** (backs the project,
+  decides call-outs) are, and which **program** it belongs to, if any;
+  `null` for anything they skip. Leave `lifecycle: planning` and `health:
+  not-reported`: the first `/report` sets them. If `portfolio.json` was on
+  the keep list (existing repo), don't change it; mention it instead.
 
 Show the user the finished `00-vision.md` and the summaries.
 

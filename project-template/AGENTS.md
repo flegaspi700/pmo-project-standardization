@@ -71,6 +71,17 @@ Check `docs/04-project-plan.md` → Status table for what's done and what's
 next. Work on the current phase only — don't jump ahead to later-phase
 components unless explicitly asked.
 
+## Portfolio reporting
+
+`portfolio.json` is what this project reports to the portfolio: owner,
+sponsor, lifecycle, health, phase, progress, risks, blockers, call-outs,
+budget. `/report` and `/wrap-up` keep it current. Fields and rules:
+[reporting contract](https://github.com/flegaspi700/pmo-project-standardization/blob/main/spec/reporting-contract.md)
+(also in `<template-dir>\spec\`).
+
+- Never guess health, risks, blockers or call-outs: ask the user.
+- Unknown stays `null`. Keep the file valid JSON (UTF-8, 2-space indent).
+
 ## Requirements and stories
 
 Work is defined in `docs/01-requirements.md` as epics → features → stories.

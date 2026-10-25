@@ -15,8 +15,9 @@ that gives every new or existing repo the same structure. The agent is
 told, in writing, how to plan, build, test and report, and the project
 records it all in predictable places.
 
-**Status:** v1.1.0 is in use for new projects. Next phase: roll the
-standard out across existing repos and build cross-repo reporting
+**Status:** in use for new projects (current version in
+[`CHANGELOG.md`](CHANGELOG.md)). Next phase: roll the standard out across
+existing repos and build a portfolio health dashboard
 ([roadmap](#roadmap)).
 
 ---
@@ -29,7 +30,7 @@ standard out across existing repos and build cross-repo reporting
 | Scope lives in someone's head | Vision → Epic → Feature → Story with IDs and a Definition of Done |
 | "Why did we do it this way?" is lost | Trade-offs logged as decision records with the options considered |
 | The AI agent picks its own process | `AGENTS.md` gives the agent the rules: test-first, simplest code, ask before adding cost |
-| Status means asking around | Status report, session log and plan (Gantt) in known files |
+| Status means asking around | Status report, session log and plan (Gantt) in known files, plus a machine-readable `portfolio.json` per repo |
 | Security, accessibility and budget come up late | Each has a checklist doc and a command from day one |
 
 ## What every project gets
@@ -56,7 +57,16 @@ which docs are active, architecture rules it must not break, and how to
 work: test-first, one branch and PR per story, Conventional Commits with
 story IDs, no new dependency or cost without a logged decision.
 
-**3. Repeatable workflow commands (`.claude/skills/`)**
+**3. A portfolio report card (`portfolio.json`)**
+
+What the project reports upward, in a fixed format any tool can read:
+owner, sponsor, program, lifecycle, health (🟢/🟡/🔴), phase, progress,
+risks, blockers, call-outs for leadership, and budget. `/report` and
+`/wrap-up` keep it current, and judgment calls (health, risks, call-outs)
+always come from a person. Contract and JSON Schema:
+[`spec/`](spec/reporting-contract.md).
+
+**4. Repeatable workflow commands (`.claude/skills/`)**
 
 | Command | What it does |
 |---|---|
@@ -119,15 +129,18 @@ flowchart LR
 
 ## Roadmap
 
-1. **Standardize existing repos.** Inventory all repos, pilot the
+Done: version stamp in every new project (v1.2.0) and the reporting
+contract, `portfolio.json` (v1.3.0).
+
+1. **Compliance spec.** Written rules for when a repo counts as adopted,
+   versioned and current, including which template changes are required.
+2. **Standardize existing repos.** Inventory all repos, pilot the
    template on 2–3, feed what's learned back in.
    ([notes](ideas/standardize-repos.md))
-2. **Version stamp.** Each project records which template version it was
-   created from, so drift can be detected.
-3. **Cross-repo reporting.** A separate project that reads the standard
-   files (version, doc status, stories, status) from every repo and reports
-   portfolio-wide: which projects follow the standard, where each stands,
-   where time and money go.
+3. **Portfolio health dashboard.** A separate project, built on this
+   standard, where a portfolio manager reviews every repo: health, owner,
+   risks, call-outs, budget and compliance.
+   ([notes](ideas/portfolio-reporting.md))
 4. **Governance extensions** once real projects need them: expanded
    security, legal/compliance and website-launch checklists
    ([ideas/](ideas/)).
@@ -142,6 +155,7 @@ flowchart LR
 | `new-project.ps1` | Copies `project-template` to a new folder, fills in the name and hosting (`-Hosting local\|github`, default local), runs `git init` on `main`. `-IntoExisting` adds the template to a repo you already cloned; `-DryRun` previews. |
 | `skills/new-project/` | Source of the `/new-project` Claude Code command (user level). |
 | `tests/check-template.ps1` | Automated check of the template (see [Quality](#quality)). Run it before opening a PR. |
+| `spec/` | Specs for tools that read projects built on the standard: the reporting contract and `portfolio.json` JSON Schema. Not copied into projects. |
 | `ideas/` | Ideas captured for later (not part of the template). |
 | `CHANGELOG.md` | What changed in each version (git tags `v1.0.0`, ...). |
 

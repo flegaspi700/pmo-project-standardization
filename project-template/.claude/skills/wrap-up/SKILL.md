@@ -14,6 +14,9 @@ Wrap up this session.
    stories worked on, time spent, what changed (files and why), exactly
    where things stopped, the very next step (specific enough to start
    without thinking), and open questions.
-4. Make sure story statuses in `docs/01-requirements.md` match reality.
+4. Make sure story statuses in `docs/01-requirements.md` match reality,
+   then refresh `progress` in `portfolio.json` (stories done and total,
+   open bugs, `as_of` today). Don't touch health, risks, call-outs or
+   `updated`: those need a person, via `/report`.
 5. Tell the user, briefly: what's uncommitted (or unpushed, on `github`),
    and the next step from the log.
