@@ -4,7 +4,7 @@ Notable changes to the project template. Versions are git tags (`v1.0.0`, ...).
 Projects keep the copy they were created from, so this list shows what newer
 projects get that older ones don't.
 
-## Unreleased
+## v1.5.1 (2026-10-25)
 
 - `/update-template` handles barely-filled-in projects (found in the second pilot): placeholders are never copied or counted; `summary` falls back to `AGENTS.md` or the README when the vision is unfilled; `progress` is `null` without real stories; `budget` is `null` while doc `16`'s limits are placeholders; placeholder-only template changes are recognised as nothing to merge; the test step says when there's no test command; warnings about the project's own unfinished docs are reported, not fixed.
 
