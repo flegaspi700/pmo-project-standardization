@@ -70,7 +70,10 @@ UTF-8 without a BOM; keep the project's line endings.
   Apply only that change to the project's copy, and only the parts the
   project doesn't already have. Keep everything the project wrote. Insert
   new `AGENTS.md` sections at the same place as in the template. If a change
-  conflicts with the project's own edit, show both and ask.
+  conflicts with the project's own edit, show both and ask. A change that
+  only swaps a hard-coded value for a placeholder (e.g. a path for
+  `<template-dir>`) is usually already there once you fill the placeholder
+  in: then there's nothing to merge; say so.
 - **REVIEW:** the template removed the file. Ask whether to delete it.
 - **UP-TO-DATE:** nothing to do.
 
@@ -83,11 +86,17 @@ Then set the stamp near the top of `AGENTS.md` (add it if missing):
 If the project didn't have one (or it was just added), fill it in following
 the reporting contract (link in `AGENTS.md` → Portfolio reporting):
 
-1. **From the docs:** `name`, `summary` (from `docs/00-vision.md`),
-   `phase` and `next_milestone` (`docs/04-project-plan.md`), `progress`
-   (story statuses in `docs/01-requirements.md`; dropped stories don't
-   count), `budget` (`docs/16-budget.md`, only if `16` is Active, else
-   `null`).
+1. **From the docs.** Text that is still a template placeholder (`<...>`)
+   is not data: never copy or count it.
+   - `name`, and `summary` from `docs/00-vision.md`; if the vision isn't
+     filled in yet, from `AGENTS.md` → What this project is, else the
+     `README.md` description.
+   - `phase` and `next_milestone` from `docs/04-project-plan.md`.
+   - `progress` from story statuses in `docs/01-requirements.md`. Dropped
+     stories and placeholder rows don't count; with no real stories yet,
+     `progress` is `null`.
+   - `budget` from `docs/16-budget.md`, only if `16` is Active and its
+     limits are filled in; otherwise `null`.
 2. **Ask the user:** `owner`, `sponsor`, `program`, `lifecycle`.
 3. **Draft, then ask:** health and reason, risks, blockers, call-outs.
    Draft them from the vision's risks, the latest session log, and the
@@ -102,7 +111,13 @@ the reporting contract (link in `AGENTS.md` → Portfolio reporting):
    warnings. For each failure or warning, apply its fix or tell the user
    why not.
 2. Run the project's tests (`AGENTS.md` → Commands), even though no code
-   changed, and keep the output for the PR.
+   changed, and keep the output for the PR. If the project has no test
+   command yet (the Commands table is still placeholders), say so: this
+   step doesn't apply.
+
+Warnings about the project's own unfinished docs (e.g. W2, an unfilled
+vision) aren't part of the update: report them with their fix and leave
+them for the project's normal work.
 
 ## 6. Finish
 
