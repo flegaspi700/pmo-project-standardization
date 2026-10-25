@@ -139,6 +139,12 @@ change**. If a new kind of diagram would help (e.g. the first stored data
 See `docs/06-coding-conventions.md` for the full layout. Summary: <one line
 describing the top-level layout and where tests live>.
 
+**Text files are UTF-8 without a BOM.** Windows PowerShell 5.1 reads them
+wrong by default (`—` shows as three odd characters starting with `â`),
+and writing that text back as UTF-8 saves the garbling. Use your own file tools, or pass `-Encoding UTF8` to
+`Get-Content` and write with
+`[System.IO.File]::WriteAllText($path, $text, (New-Object System.Text.UTF8Encoding($false)))`.
+
 ## Writing code: simple and explained
 
 Full rules in `docs/06-coding-conventions.md`. The short version:

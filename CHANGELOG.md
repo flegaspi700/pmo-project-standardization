@@ -8,6 +8,7 @@ projects get that older ones don't.
 
 - No hard-coded `D:\Projects\Template` paths. `/new-project` finds the template folder from its own junction, and `new-project.ps1` fills a new `<template-dir>` placeholder with the folder it runs from, so the template works from any location.
 - `tests/check-template.ps1`, run locally before each PR: generates a project and an `-IntoExisting` copy, then checks for unfilled placeholders, broken links and `docs/NN-*.md` references, skill frontmatter, and that the brainstorm steps in `/new-project` match `/brainstorm`.
+- `AGENTS.md` rule: text files are UTF-8 without a BOM, with how to read and write them safely in Windows PowerShell 5.1 (its default read garbles characters like `—`). `tests/check-template.ps1` now fails on files that aren't valid UTF-8 or contain that garbling.
 
 ## v1.0.0 (2026-10-10)
 
