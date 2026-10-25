@@ -84,8 +84,8 @@ reviewed health in a while.
   describe the migration in the CHANGELOG. Readers must handle every
   `schema` version still in use.
 
-## Open question
+## Contract-only adoption
 
-- Can a repo adopt **only** `portfolio.json`, without the rest of the
-  template, to appear on the portfolio with real status? To be settled in
-  the compliance spec (it would sit between "not adopted" and "adopted").
+A repo can add **only** `portfolio.json`, without the rest of the
+template, and appear in the portfolio with real status: compliance level 1,
+Reporting. See [compliance.md](compliance.md).

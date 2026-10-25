@@ -4,6 +4,13 @@ Notable changes to the project template. Versions are git tags (`v1.0.0`, ...).
 Projects keep the copy they were created from, so this list shows what newer
 projects get that older ones don't.
 
+## Unreleased
+
+- **Compliance spec:** when a repo counts as on the standard, judged by evidence in the repo, not by its version stamp. Levels 0 Not on standard, 1 Reporting (only `portfolio.json`), 2 Adopted, 3 Current; required checks get a 30-day grace period; `CLAUDE.md` and unfilled planning docs are warnings; archived repos, forks and repos tagged `portfolio-exclude` are out of scope. Spec in `spec/compliance.md`, checks in `spec/compliance-checks.json`.
+- `check-compliance.ps1`: run the checks against any local repo folder and see its level, failures and warnings. Changes nothing.
+- Compliance: C1-C3 (core structure) required from 2026-11-09, C4 (`portfolio.json`) required from 2026-11-24; C5-C7 optional; W1-W2 warnings.
+- `tests/check-template.ps1` confirms fresh projects reach level 3 and checks the registry.
+
 ## v1.3.0 (2026-10-25)
 
 - **Reporting contract:** every project gets a `portfolio.json` with what it reports to the portfolio: owner, sponsor, program, lifecycle, health, phase, progress, next milestone, risks, blockers, call-outs, budget. Spec in `spec/reporting-contract.md`, JSON Schema in `spec/portfolio.schema.json`. `/new-project` fills summary, owner, sponsor and program; `/report` updates health, risks, blockers, call-outs, phase, progress and budget (also on Small projects); `/wrap-up` refreshes progress only. New `AGENTS.md` section: Portfolio reporting. `tests/check-template.ps1` checks the generated file and the spec's example against the schema.

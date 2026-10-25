@@ -98,7 +98,10 @@ first.
    **Done 2026-10-25:** `portfolio.json`, see
    [spec/reporting-contract.md](../spec/reporting-contract.md). Owner and
    sponsor both recorded; budget included when doc `16` is active.
-2. **Compliance spec** (levels above, required vs optional changes,
+2. **Done 2026-10-25:** [spec/compliance.md](../spec/compliance.md),
+   evidence-based checks, contract-only level allowed, `CLAUDE.md` as a
+   warning, 30-day grace, exclusions by archived/fork/topic.
+   **Compliance spec** (levels above, required vs optional changes,
    marked in the CHANGELOG).
 3. **Pilot:** apply both to `ocr-pipeline` plus 1-2 more repos (ties in
    with [standardize-repos.md](standardize-repos.md)).

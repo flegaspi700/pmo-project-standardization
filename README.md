@@ -123,25 +123,28 @@ flowchart LR
 - `tests/check-template.ps1` generates a fresh project and an
   existing-repo install, then checks: no unfilled placeholders, every link
   and doc reference resolves, every command has valid metadata, duplicated
-  instructions stay in sync, and every file is valid UTF-8.
+  instructions stay in sync, every file is valid UTF-8, and a fresh
+  project passes every required compliance check.
+- `check-compliance.ps1` rates any repo against the standard (Not on
+  standard, Reporting, Adopted, Current) by evidence in the repo, using the
+  checks in [`spec/compliance-checks.json`](spec/compliance-checks.json).
 - Every change goes through a branch and pull request; releases are tagged
   and listed in [`CHANGELOG.md`](CHANGELOG.md).
 
 ## Roadmap
 
-Done: version stamp in every new project (v1.2.0) and the reporting
-contract, `portfolio.json` (v1.3.0).
+Done: version stamp in every new project (v1.2.0), the reporting
+contract `portfolio.json` (v1.3.0), and the
+[compliance spec](spec/compliance.md) with `check-compliance.ps1`.
 
-1. **Compliance spec.** Written rules for when a repo counts as adopted,
-   versioned and current, including which template changes are required.
-2. **Standardize existing repos.** Inventory all repos, pilot the
+1. **Standardize existing repos.** Inventory all repos, pilot the
    template on 2–3, feed what's learned back in.
    ([notes](ideas/standardize-repos.md))
-3. **Portfolio health dashboard.** A separate project, built on this
+2. **Portfolio health dashboard.** A separate project, built on this
    standard, where a portfolio manager reviews every repo: health, owner,
    risks, call-outs, budget and compliance.
    ([notes](ideas/portfolio-reporting.md))
-4. **Governance extensions** once real projects need them: expanded
+3. **Governance extensions** once real projects need them: expanded
    security, legal/compliance and website-launch checklists
    ([ideas/](ideas/)).
 
@@ -155,7 +158,8 @@ contract, `portfolio.json` (v1.3.0).
 | `new-project.ps1` | Copies `project-template` to a new folder, fills in the name and hosting (`-Hosting local\|github`, default local), runs `git init` on `main`. `-IntoExisting` adds the template to a repo you already cloned; `-DryRun` previews. |
 | `skills/new-project/` | Source of the `/new-project` Claude Code command (user level). |
 | `tests/check-template.ps1` | Automated check of the template (see [Quality](#quality)). Run it before opening a PR. |
-| `spec/` | Specs for tools that read projects built on the standard: the reporting contract and `portfolio.json` JSON Schema. Not copied into projects. |
+| `check-compliance.ps1` | Rates a local repo against the standard: each check, the level, warnings. Read-only. |
+| `spec/` | Specs for tools that read projects built on the standard: the reporting contract, `portfolio.json` JSON Schema, and the compliance spec and checks. Not copied into projects. |
 | `ideas/` | Ideas captured for later (not part of the template). |
 | `CHANGELOG.md` | What changed in each version (git tags `v1.0.0`, ...). |
 
