@@ -4,7 +4,7 @@ Notable changes to the project template. Versions are git tags (`v1.0.0`, ...).
 Projects keep the copy they were created from, so this list shows what newer
 projects get that older ones don't.
 
-## Unreleased
+## v1.3.0 (2026-10-25)
 
 - **Reporting contract:** every project gets a `portfolio.json` with what it reports to the portfolio: owner, sponsor, program, lifecycle, health, phase, progress, next milestone, risks, blockers, call-outs, budget. Spec in `spec/reporting-contract.md`, JSON Schema in `spec/portfolio.schema.json`. `/new-project` fills summary, owner, sponsor and program; `/report` updates health, risks, blockers, call-outs, phase, progress and budget (also on Small projects); `/wrap-up` refreshes progress only. New `AGENTS.md` section: Portfolio reporting. `tests/check-template.ps1` checks the generated file and the spec's example against the schema.
 
