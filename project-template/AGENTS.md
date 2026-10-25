@@ -3,6 +3,9 @@
 Context file for AI coding agents working on this project. Read this first,
 every session, before writing or changing code.
 
+**Template version: <template-version>** — the project template this
+project was created from. Its `CHANGELOG.md` lists what newer versions add.
+
 ## Commands (skills)
 
 The project's workflow commands live in `.claude/skills/` (`/story`,

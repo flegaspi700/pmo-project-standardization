@@ -6,6 +6,7 @@
     Runs new-project.ps1 into a temp folder (new project, and -IntoExisting
     on a fake repo) and checks:
       - no script placeholders are left (<Project name>, <hosting>, ...)
+      - AGENTS.md has the template version stamped
       - relative Markdown links and `docs/NN-*.md` references resolve
       - every SKILL.md has frontmatter with a name matching its folder and
         a description
@@ -48,7 +49,7 @@ try {
     # user and are expected.
     foreach ($file in $mdFiles) {
         $text = Read-Text $file.FullName
-        foreach ($placeholder in '<Project name>', '<project-name>', '<hosting>', '<template-dir>') {
+        foreach ($placeholder in '<Project name>', '<project-name>', '<hosting>', '<template-dir>', '<template-version>') {
             if ($text.Contains($placeholder)) {
                 Fail "$($file.FullName.Substring($project.Length + 1)): $placeholder not filled in"
             }
@@ -56,6 +57,9 @@ try {
     }
     if (-not (Read-Text (Join-Path $project "AGENTS.md")).Contains("**Hosting: github**")) {
         Fail "AGENTS.md: hosting line not set to github"
+    }
+    if ((Read-Text (Join-Path $project "AGENTS.md")) -notmatch '\*\*Template version: v\d+\.\d+\.\d+') {
+        Fail "AGENTS.md: template version not stamped (expected a vX.Y.Z git tag)"
     }
 
     # Links: [text](relative/path) and `docs/NN-name.md` references
