@@ -4,7 +4,7 @@ Notable changes to the project template. Versions are git tags (`v1.0.0`, ...).
 Projects keep the copy they were created from, so this list shows what newer
 projects get that older ones don't.
 
-## Unreleased
+## v1.5.0 (2026-10-25)
 
 - **`/update-template`** (user-level command, `skills/update-template/`): updates an existing project to the newest template version on a branch. Plans the changes, shows what's new since the project's version, adds or replaces files the project never changed, merges the template's changes into files it did change (keeping its own edits), fills in `portfolio.json` with the user (judgment fields drafted from the docs, confirmed by the user), stamps the version, and checks compliance before and after the grace periods. Install with a junction, like `/new-project`.
 - `update-plan.ps1` (read-only): finds the project's base version (its stamp, or the oldest tag whose skills match best), and sorts every template file changed since then into ADD, REPLACE, MERGE, UP-TO-DATE or REVIEW. Ignores line endings; reads old versions from git tags as UTF-8.
