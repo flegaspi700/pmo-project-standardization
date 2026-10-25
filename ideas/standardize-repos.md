@@ -55,3 +55,6 @@ project) can report across them.
 - What should the report answer first? For example "which repos follow the
   standard", "what's the status of each project", or "where is time and
   money going".
+
+Continued in [portfolio-reporting.md](portfolio-reporting.md) (2026-10-25):
+the reporting side, as a portfolio health dashboard.
