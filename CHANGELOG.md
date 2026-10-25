@@ -4,6 +4,10 @@ Notable changes to the project template. Versions are git tags (`v1.0.0`, ...).
 Projects keep the copy they were created from, so this list shows what newer
 projects get that older ones don't.
 
+## Unreleased
+
+- New projects record the template version they were created from: `AGENTS.md` gets a `Template version` line, filled by `new-project.ps1` from the template's git tag (e.g. `v1.1.0`, or `v1.1.0-3-gabc1234` between releases). `-IntoExisting` only stamps it if it adds `AGENTS.md`; an existing `AGENTS.md` is never changed.
+
 ## v1.1.0 (2026-10-25)
 
 - No hard-coded `D:\Projects\Template` paths. `/new-project` finds the template folder from its own junction, and `new-project.ps1` fills a new `<template-dir>` placeholder with the folder it runs from, so the template works from any location.
