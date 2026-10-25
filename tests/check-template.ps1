@@ -7,6 +7,8 @@
     on a fake repo) and checks:
       - no script placeholders are left (<Project name>, <hosting>, ...)
       - AGENTS.md has the template version stamped
+      - portfolio.json (and the example in spec/reporting-contract.md) is
+        valid JSON and fits spec/portfolio.schema.json
       - relative Markdown links and `docs/NN-*.md` references resolve
       - every SKILL.md has frontmatter with a name matching its folder and
         a description
@@ -28,6 +30,39 @@ function Fail($message) {
 
 function Read-Text($path) {
     [System.IO.File]::ReadAllText($path, (New-Object System.Text.UTF8Encoding($false)))
+}
+
+# Checks a portfolio.json text against spec/portfolio.schema.json and
+# returns the parsed object (or $null if it isn't valid JSON). Windows
+# PowerShell has no schema validator, so this checks what the schema pins
+# down at the top level: required fields, known fields only, enums, constants.
+function Test-Portfolio($json, $label) {
+    $schema = (Read-Text (Join-Path $root "spec\portfolio.schema.json")) | ConvertFrom-Json
+    try {
+        $portfolio = $json | ConvertFrom-Json
+    }
+    catch {
+        Fail "${label}: not valid JSON ($($_.Exception.Message))"
+        return $null
+    }
+    $known = @($schema.properties.PSObject.Properties.Name)
+    $present = @($portfolio.PSObject.Properties.Name)
+    foreach ($field in $schema.required) {
+        if ($present -notcontains $field) { Fail "${label}: missing required field '$field'" }
+    }
+    foreach ($field in $present) {
+        if ($known -notcontains $field) { Fail "${label}: field '$field' isn't in the schema" }
+    }
+    foreach ($field in $present) {
+        $rule = $schema.properties.$field
+        if ($rule.enum -and $rule.enum -notcontains $portfolio.$field) {
+            Fail "${label}: $field '$($portfolio.$field)' isn't one of: $($rule.enum -join ', ')"
+        }
+        if ($null -ne $rule.const -and $portfolio.$field -ne $rule.const) {
+            Fail "${label}: $field must be $($rule.const)"
+        }
+    }
+    return $portfolio
 }
 
 # Collapse whitespace and line breaks so wrapping doesn't matter
@@ -60,6 +95,11 @@ try {
     }
     if ((Read-Text (Join-Path $project "AGENTS.md")) -notmatch '\*\*Template version: v\d+\.\d+\.\d+') {
         Fail "AGENTS.md: template version not stamped (expected a vX.Y.Z git tag)"
+    }
+
+    $portfolio = Test-Portfolio (Read-Text (Join-Path $project "portfolio.json")) "portfolio.json"
+    if ($portfolio -and $portfolio.name -ne "Check Project") {
+        Fail "portfolio.json: name not filled in (got '$($portfolio.name)')"
     }
 
     # Links: [text](relative/path) and `docs/NN-name.md` references
@@ -143,7 +183,17 @@ foreach ($step in $steps) {
     }
 }
 
-# --- 5. Encoding -------------------------------------------------------
+# --- 5. Reporting contract example ---------------------------------------
+# The example in spec/reporting-contract.md must fit the schema too.
+$contract = Read-Text (Join-Path $root "spec\reporting-contract.md")
+$example = [regex]::Match($contract, '(?s)## Example.*?```json\r?\n(.*?)```').Groups[1].Value
+if (-not $example) {
+    Fail "spec/reporting-contract.md: no json example under '## Example'"
+} else {
+    Test-Portfolio $example "spec/reporting-contract.md example" | Out-Null
+}
+
+# --- 6. Encoding -------------------------------------------------------
 # Every file must be valid UTF-8 and free of mojibake, the trace left when
 # UTF-8 is read as Windows-1252 and saved back as UTF-8 (an em dash becomes
 # a-circumflex, euro sign, right quote). Built from char codes so this

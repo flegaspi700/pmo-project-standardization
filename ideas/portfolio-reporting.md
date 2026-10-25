@@ -95,6 +95,9 @@ first.
 
 1. **Reporting contract** in the standard: fields, file format, which
    skill keeps each field current. Ship it as a template release.
+   **Done 2026-10-25:** `portfolio.json`, see
+   [spec/reporting-contract.md](../spec/reporting-contract.md). Owner and
+   sponsor both recorded; budget included when doc `16` is active.
 2. **Compliance spec** (levels above, required vs optional changes,
    marked in the CHANGELOG).
 3. **Pilot:** apply both to `ocr-pipeline` plus 1-2 more repos (ties in

@@ -116,9 +116,12 @@ if ($IntoExisting) {
 # the ANSI codepage and mangle characters like the arrows used in the docs.
 $utf8NoBom = New-Object System.Text.UTF8Encoding($false)
 # Only the files copied in just now - never an existing repo's own files.
-$copied | Where-Object { $_ -like '*.md' } | ForEach-Object {
+# In portfolio.json the name goes inside a JSON string, so escape \ and "
+$jsonName = $Name.Replace('\', '\\').Replace('"', '\"')
+$copied | Where-Object { $_ -like '*.md' -or $_ -like '*portfolio.json' } | ForEach-Object {
     $text = [System.IO.File]::ReadAllText($_, $utf8NoBom)
-    $updated = $text.Replace('<Project name>', $Name).Replace('<project-name>', $folderName).Replace('<hosting>', $Hosting).Replace('<template-dir>', $PSScriptRoot).Replace('<template-version>', $templateVersion)
+    $projectName = if ($_ -like '*.json') { $jsonName } else { $Name }
+    $updated = $text.Replace('<Project name>', $projectName).Replace('<project-name>', $folderName).Replace('<hosting>', $Hosting).Replace('<template-dir>', $PSScriptRoot).Replace('<template-version>', $templateVersion)
     if ($updated -ne $text) {
         [System.IO.File]::WriteAllText($_, $updated, $utf8NoBom)
     }

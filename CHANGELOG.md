@@ -4,6 +4,10 @@ Notable changes to the project template. Versions are git tags (`v1.0.0`, ...).
 Projects keep the copy they were created from, so this list shows what newer
 projects get that older ones don't.
 
+## Unreleased
+
+- **Reporting contract:** every project gets a `portfolio.json` with what it reports to the portfolio: owner, sponsor, program, lifecycle, health, phase, progress, next milestone, risks, blockers, call-outs, budget. Spec in `spec/reporting-contract.md`, JSON Schema in `spec/portfolio.schema.json`. `/new-project` fills summary, owner, sponsor and program; `/report` updates health, risks, blockers, call-outs, phase, progress and budget (also on Small projects); `/wrap-up` refreshes progress only. New `AGENTS.md` section: Portfolio reporting. `tests/check-template.ps1` checks the generated file and the spec's example against the schema.
+
 ## v1.2.0 (2026-10-25)
 
 - New projects record the template version they were created from: `AGENTS.md` gets a `Template version` line, filled by `new-project.ps1` from the template's git tag (e.g. `v1.1.0`, or `v1.1.0-3-gabc1234` between releases). `-IntoExisting` only stamps it if it adds `AGENTS.md`; an existing `AGENTS.md` is never changed.

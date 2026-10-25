@@ -1,0 +1,20 @@
+{
+  "$schema": "https://raw.githubusercontent.com/flegaspi700/pmo-project-standardization/main/spec/portfolio.schema.json",
+  "schema": 1,
+  "name": "<Project name>",
+  "summary": null,
+  "owner": null,
+  "sponsor": null,
+  "program": null,
+  "lifecycle": "planning",
+  "health": "not-reported",
+  "health_reason": null,
+  "phase": null,
+  "progress": null,
+  "next_milestone": null,
+  "risks": [],
+  "blockers": [],
+  "callouts": [],
+  "budget": null,
+  "updated": null
+}
