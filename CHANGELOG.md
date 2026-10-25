@@ -4,7 +4,7 @@ Notable changes to the project template. Versions are git tags (`v1.0.0`, ...).
 Projects keep the copy they were created from, so this list shows what newer
 projects get that older ones don't.
 
-## Unreleased
+## v1.4.0 (2026-10-25)
 
 - **Compliance spec:** when a repo counts as on the standard, judged by evidence in the repo, not by its version stamp. Levels 0 Not on standard, 1 Reporting (only `portfolio.json`), 2 Adopted, 3 Current; required checks get a 30-day grace period; `CLAUDE.md` and unfilled planning docs are warnings; archived repos, forks and repos tagged `portfolio-exclude` are out of scope. Spec in `spec/compliance.md`, checks in `spec/compliance-checks.json`.
 - `check-compliance.ps1`: run the checks against any local repo folder and see its level, failures and warnings. Changes nothing.
