@@ -82,6 +82,36 @@ status, phase, top risks, call-outs, and template version. `/report` and
 best. 1 is its first milestone (same scan, no page yet); 3 can be added
 later to turn gaps into tasks; 4 only if trends over time prove necessary.
 
+## Actions on the dashboard (2026-10-25)
+
+Which of the standard's tools become buttons depends on whether they
+**read** or **write**, and on who is looking.
+
+| Tool | On the dashboard | Why |
+|---|---|---|
+| `check-compliance.ps1` | Runs in every scan; the level and warnings are shown per repo. At most a "Re-scan now" button | Read-only, so nobody should have to click |
+| `update-plan.ps1` | Shown, not clicked: "Behind: v1.0.0 → v1.5.0, 2 files to add, 3 to merge" | Read-only: part of the data |
+| `/update-template` | "Request update" (v1) or "Start update" (later) | Writes to the repo; merges and judgment calls need a person |
+| `/report` | "Request status report", offered when the report is stale (S1) or health was never reported (S2) | Health, risks, call-outs must come from the owner |
+| `portfolio.json` | "Edit" link to the file in GitHub's editor | Small fixes without tooling |
+| `/new-project` | "Add project" | Starts the standard on a new repo |
+
+**Who presses the button matters.** A portfolio manager or executive
+shouldn't change someone else's repo directly, and the reporting contract
+says judgment fields come from the project's people. So most buttons are
+**requests to the owner**, not actions.
+
+| Approach | How a button works | Static page? | Effort |
+|---|---|---|---|
+| 1 Links and requests | "Request update" opens a pre-filled GitHub issue in that repo for the owner (e.g. "Please run `/update-template`, v1.0.0 → v1.5.0"); same for status reports | Yes: plain links, no sign-in or secrets | S |
+| 2 Trigger automation | "Re-scan" starts a GitHub Action (`workflow_dispatch`); "Start update" runs Claude Code in an Action that opens a **draft PR** for the owner to review and complete with the judgment fields | Needs GitHub sign-in or a token, which a static page can't hold safely | M-L |
+| 3 Full app | Real buttons with a backend, permissions, audit trail | Needs hosting and auth | L |
+
+**Leaning:** v1 is read-only with link buttons (approach 1). The issues
+it opens are a visible trail of "leadership asked, owner did it": real
+PMO governance at no hosting cost. Approach 2 is a strong second release
+(automated draft PR, a person still owns the judgment fields).
+
 ## Riskiest assumption
 
 That the data will be there. Most repos aren't on the standard, and the
@@ -105,6 +135,9 @@ first.
    marked in the CHANGELOG).
 3. **Pilot:** apply both to `ocr-pipeline` plus 1-2 more repos (ties in
    with [standardize-repos.md](standardize-repos.md)).
+   **ocr-pipeline done 2026-10-25** (v1.0.0 → v1.4.0 by hand, level 3, no
+   warnings); its lessons became `/update-template` (v1.5.0). Next: run
+   `/update-template` end to end on a second repo.
 4. **Reporting project** via `/new-project` (brainstorm option): scan →
    Markdown report → static dashboard.
 
