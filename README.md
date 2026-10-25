@@ -157,6 +157,8 @@ contract `portfolio.json` (v1.3.0), and the
 | `project-template/` | The template. Everything in it is copied into each new project: docs, `AGENTS.md`, workflow commands (`.claude/skills/`), PR template, `.gitignore`. |
 | `new-project.ps1` | Copies `project-template` to a new folder, fills in the name and hosting (`-Hosting local\|github`, default local), runs `git init` on `main`. `-IntoExisting` adds the template to a repo you already cloned; `-DryRun` previews. |
 | `skills/new-project/` | Source of the `/new-project` Claude Code command (user level). |
+| `skills/update-template/` | Source of the `/update-template` command (user level): brings an existing project up to the newest template version. |
+| `update-plan.ps1` | Read-only: finds a project's template version and lists what to add, replace or merge to reach the newest one. Used by `/update-template`. |
 | `tests/check-template.ps1` | Automated check of the template (see [Quality](#quality)). Run it before opening a PR. |
 | `check-compliance.ps1` | Rates a local repo against the standard: each check, the level, warnings. Read-only. |
 | `spec/` | Specs for tools that read projects built on the standard: the reporting contract, `portfolio.json` JSON Schema, and the compliance spec and checks. Not copied into projects. |
@@ -180,14 +182,25 @@ If PowerShell blocks scripts:
 
 Then start Claude Code inside the new folder and run `/breakdown`.
 
-### Installing the `/new-project` command
+### Updating an existing project
+
+Inside a project that already uses the template, run `/update-template`.
+It finds the project's template version, shows what's new since then, adds
+or replaces the files the project never changed, merges the template's
+changes into the ones it did change (keeping the project's own edits),
+fills in `portfolio.json` with you, and checks the result with
+`check-compliance.ps1`. Everything happens on a branch; nothing is merged
+without asking.
+
+### Installing the commands
 
 Claude Code finds user-level commands in `%USERPROFILE%\.claude\skills\`.
-Point a **junction** (folder shortcut) there at this repo, so edits to
-`skills/new-project/SKILL.md` take effect immediately:
+Point a **junction** (folder shortcut) there at this repo for each
+command, so edits to its `SKILL.md` take effect immediately:
 
 ```powershell
 New-Item -ItemType Junction -Path "$env:USERPROFILE\.claude\skills\new-project" -Target "<path-to-this-repo>\skills\new-project"
+New-Item -ItemType Junction -Path "$env:USERPROFILE\.claude\skills\update-template" -Target "<path-to-this-repo>\skills\update-template"
 ```
 
 ### Changing the template

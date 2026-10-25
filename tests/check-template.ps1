@@ -12,6 +12,8 @@
       - compliance: both generated projects reach level 3 (Current), an
         empty folder is level 0, a folder with only portfolio.json level 1;
         spec/compliance-checks.json is well formed
+      - update-plan.ps1 sorts files into ADD / REPLACE / MERGE / UP-TO-DATE
+        and detects an unstamped project's base version
       - relative Markdown links and `docs/NN-*.md` references resolve
       - every SKILL.md has frontmatter with a name matching its folder and
         a description
@@ -37,6 +39,12 @@ function Read-Text($path) {
 
 # Get-Compliance and Get-PortfolioProblems
 . (Join-Path $root "check-compliance.ps1")
+# Get-UpdatePlan, Find-BaseVersion and Get-TemplateFileAt
+. (Join-Path $root "update-plan.ps1")
+
+function Write-Utf8($path, $text) {
+    [System.IO.File]::WriteAllText($path, $text, (New-Object System.Text.UTF8Encoding($false)))
+}
 
 # Fails for every way a portfolio.json text doesn't fit the schema, and
 # returns the parsed object ($null if it isn't valid JSON)
@@ -145,12 +153,47 @@ try {
     New-Item -ItemType Directory -Path $reportingOnly | Out-Null
     Copy-Item (Join-Path $project "portfolio.json") $reportingOnly
     Test-Level $reportingOnly 1 "folder with only portfolio.json"
+
+    # --- 4. Update plan (update-plan.ps1) --------------------------------
+    # Fixed tags, so these hold however the template changes later:
+    # v1.2.0 -> v1.4.0 changed report, wrap-up, AGENTS.md, added portfolio.json
+    $old = Join-Path $tempDir "old-project"
+    Copy-Item $project $old -Recurse
+    $skillsDir = Join-Path $old ".claude\skills"
+    Write-Utf8 (Join-Path $skillsDir "report\SKILL.md") (Get-TemplateFileAt "v1.2.0" "project-template/.claude/skills/report/SKILL.md")
+    Remove-Item (Join-Path $skillsDir "wrap-up\SKILL.md")
+    Write-Utf8 (Join-Path $old "portfolio.json") (Get-TemplateFileAt "v1.4.0" "project-template/portfolio.json")
+    $plan = Get-UpdatePlan $old "v1.2.0" "v1.4.0"
+    $expected = @{
+        ".claude/skills/report/SKILL.md"  = "REPLACE"
+        ".claude/skills/wrap-up/SKILL.md" = "ADD"
+        "portfolio.json"                  = "UP-TO-DATE"
+        "AGENTS.md"                       = "MERGE"
+    }
+    foreach ($path in $expected.Keys) {
+        $got = ($plan.Files | Where-Object { $_.Path -eq $path }).Action
+        if ($got -ne $expected[$path]) { Fail "update plan: $path is '$got', expected '$($expected[$path])'" }
+    }
+    if (@($plan.Changelog).Count -ne 2) {
+        Fail "update plan: expected the v1.3.0 and v1.4.0 CHANGELOG entries, got $(@($plan.Changelog).Count)"
+    }
+
+    # No stamp: the base is detected from the skills. Skills didn't change
+    # from v1.0.0 to v1.2.0, so v1.1.0 skills give the oldest tie, v1.0.0.
+    $agentsPath = Join-Path $old "AGENTS.md"
+    Write-Utf8 $agentsPath ((Read-Text $agentsPath) -replace '\*\*Template version: [^*]+\*\*', '')
+    foreach ($skill in Get-ChildItem $skillsDir -Directory) {
+        $text = Get-TemplateFileAt "v1.1.0" "project-template/.claude/skills/$($skill.Name)/SKILL.md"
+        if ($null -eq $text) { Remove-Item $skill.FullName -Recurse } else { Write-Utf8 (Join-Path $skill.FullName "SKILL.md") $text }
+    }
+    $base = Find-BaseVersion $old (Get-TemplateTags)
+    if ($base.Version -ne "v1.0.0") { Fail "update plan: detected base $($base.Version), expected v1.0.0 ($($base.How))" }
 }
 finally {
     Remove-Item -Path $tempDir -Recurse -Force
 }
 
-# --- 4. Compliance check registry ----------------------------------------
+# --- 5. Compliance check registry ----------------------------------------
 # Unique IDs, known severities and kinds, a date on every required check,
 # and level definitions that point at real checks
 $registry = (Read-Text (Join-Path $root "spec\compliance-checks.json")) | ConvertFrom-Json
@@ -176,7 +219,7 @@ foreach ($id in @($registry.levels.reporting) + @($registry.levels.adopted)) {
     if ($ids -notcontains $id) { Fail "spec/compliance-checks.json: level refers to unknown check $id" }
 }
 
-# --- 5. Skill frontmatter ------------------------------------------------
+# --- 6. Skill frontmatter ------------------------------------------------
 $skillFiles = @(Get-ChildItem -Path (Join-Path $root "skills"), (Join-Path $root "project-template\.claude\skills") -Recurse -File -Filter SKILL.md)
 foreach ($file in $skillFiles) {
     $relative = $file.FullName.Substring($root.Length + 1)
@@ -196,7 +239,7 @@ foreach ($file in $skillFiles) {
     }
 }
 
-# --- 6. Brainstorm steps in /new-project match /brainstorm ---------------
+# --- 7. Brainstorm steps in /new-project match /brainstorm ---------------
 # Each numbered step in /new-project's "1b. Brainstorm" section must appear
 # word for word (ignoring line wrapping) in the /brainstorm skill.
 $newProject = Read-Text (Join-Path $root "skills\new-project\SKILL.md")
@@ -213,7 +256,7 @@ foreach ($step in $steps) {
     }
 }
 
-# --- 7. Reporting contract example ---------------------------------------
+# --- 8. Reporting contract example ---------------------------------------
 # The example in spec/reporting-contract.md must fit the schema too.
 $contract = Read-Text (Join-Path $root "spec\reporting-contract.md")
 $example = [regex]::Match($contract, '(?s)## Example.*?```json\r?\n(.*?)```').Groups[1].Value
@@ -223,7 +266,7 @@ if (-not $example) {
     Test-Portfolio $example "spec/reporting-contract.md example" | Out-Null
 }
 
-# --- 8. Encoding -------------------------------------------------------
+# --- 9. Encoding -------------------------------------------------------
 # Every file must be valid UTF-8 and free of mojibake, the trace left when
 # UTF-8 is read as Windows-1252 and saved back as UTF-8 (an em dash becomes
 # a-circumflex, euro sign, right quote). Built from char codes so this
