@@ -33,7 +33,7 @@ docs. Background: [ideas/portfolio-reporting.md](../ideas/portfolio-reporting.md
 | `summary` | | One sentence: what it does and for whom | `/new-project` (from the vision) |
 | `owner` | | Accountable for delivery day to day | `/new-project` |
 | `sponsor` | | Senior person who backs the project and decides call-outs | `/new-project` |
-| `program` | | Group the portfolio rolls this project up under | `/new-project` |
+| `program` | | Group the portfolio rolls this project up under (free text) | `/new-project`, then `/report` (asks) |
 | `lifecycle` | yes | `planning` · `active` · `on-hold` · `done` · `archived` | `/new-project`, then `/report` |
 | `health` | yes | `green` · `amber` · `red` · `not-reported` | `/report` (asks) |
 | `health_reason` | | One sentence why | `/report` (asks) |

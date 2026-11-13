@@ -57,7 +57,9 @@ blockers, call-outs, budget. The fields and rules are in the
 - **Never guess health, risks, blockers or call-outs: ask the user.**
 - Unknown stays `null`. Keep it valid JSON (UTF-8, 2-space indent).
 - `program` is free text: the group the dashboard shows the project under.
+  `/report` asks whether it's still right, so it can change any time.
 
 A repo can report without adopting the rest of the standard: a valid
 `portfolio.json` alone puts it at compliance level 1
-([compliance spec](../spec/compliance.md)).
+([compliance spec](../spec/compliance.md)). `/report` works there too, in a reporting-only
+mode: it asks the judgment calls and the program, with nothing to count.

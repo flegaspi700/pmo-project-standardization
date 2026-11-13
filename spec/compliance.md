@@ -53,7 +53,7 @@ Moving them to v2 is the fix, not passing the v1 checks.
 | C3 | v1 only: docs `00`-`16` all exist | optional | v1.0.0 | — |
 | C6 | v1 only: `AGENTS.md` has a `Template version:` line | optional | v1.2.0 | — |
 | C7 | v1 only: PR template present (hosting `github`) | optional | v1.0.0 | — |
-| W1 | A `CLAUDE.md`, if there is one, has an `@AGENTS.md` line | warning | v1.0.0 | — |
+| W1 | A `CLAUDE.md`, if there is one, has an `@AGENTS.md` line (repos with a Standard line) | warning | v1.0.0 | — |
 | W3 | `docs/requirements.md` has no unfilled `<...>` placeholders | warning | v2.0.0 | — |
 | W4 | No v1 copies of the standard's skills in `.claude/skills/` | warning | v2.0.0 | — |
 | W2 | v1 only: planning docs `00`, `02`-`04` have no unfilled placeholders | warning | v1.0.0 | — |
@@ -67,6 +67,8 @@ Moving them to v2 is the fix, not passing the v1 checks.
 - Adopted now includes C4: a v2 project always reports.
 - W1 now needs the `@AGENTS.md` import line. A `CLAUDE.md` that only
   mentions `AGENTS.md` in a sentence doesn't make Claude Code load it.
+- W1 applies only to repos with a Standard line (since v2.1.0): a
+  reporting-only repo has no `AGENTS.md` to load.
 - W4: a project-level copy of a skill runs instead of the one installed
   from this repo, so the project would follow stale v1 instructions.
 
@@ -104,6 +106,11 @@ doesn't instantly downgrade the whole portfolio. The first checks count
 from v1.0.0 (2026-10-10), so they're due 2026-11-09. The v2 checks count
 from v2.0.0 (2026-11-13), so they're due 2026-12-13.
 
+Grace-period warnings (and the scanner's S3) apply only to repos at
+Adopted or higher. For a Reporting repo, the required checks it fails are
+simply the step to Adopted, not a change coming due, so they aren't listed
+as warnings (since v2.1.0).
+
 ## Warnings worked out by the scanner
 
 These need GitHub data or dates, so the portfolio scan works them out,
@@ -113,7 +120,7 @@ not the file checks:
 |---|---|---|
 | S1 | Stale report | `portfolio.json` → `updated` is more than 30 days old (or `null`) while the repo had pushes in the last 30 days |
 | S2 | Health never reported | `health` is `not-reported` 14 days after the repo was created or adopted the standard |
-| S3 | Required change due soon | A required check fails and its `required_from` is within 14 days |
+| S3 | Required change due soon | The repo is Adopted or higher, a required check fails, and its `required_from` is within 14 days |
 
 ## Which repos are in scope
 

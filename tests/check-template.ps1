@@ -213,6 +213,25 @@ try {
     Write-Utf8 (Join-Path $shadowed ".claude\skills\story\SKILL.md") "---`nname: story`n---`n"
     if (-not (Test-Warning $shadowed 'W4')) { Fail "compliance: a .claude/skills/story copy didn't warn (W4)" }
     Test-Level $shadowed 3 "project with an old skill copy (warning only)"
+
+    # A reporting-only repo: W1 doesn't apply (no AGENTS.md to load), and
+    # required checks it fails aren't listed as grace-period warnings
+    Write-Utf8 (Join-Path $reportRepo "CLAUDE.md") "# Notes`n"
+    if (Test-Warning $reportRepo 'W1') { Fail "compliance: W1 fired on a reporting-only repo with a CLAUDE.md" }
+    $early = @((Get-Compliance $reportRepo "2026-11-20").Warnings | Where-Object { $_ -match 'required from' })
+    if ($early.Count -gt 0) { Fail "compliance: a reporting-only repo lists grace-period warnings ($($early -join '; '))" }
+
+    # An adopted repo still gets them: a Standard line naming another major
+    # version fails C10, which is due 2026-12-13
+    $otherMajor = Join-Path $tempDir "other-major"
+    Copy-Item $project $otherMajor -Recurse
+    $agentsOther = Join-Path $otherMajor "AGENTS.md"
+    Write-Utf8 $agentsOther ((Read-Text $agentsOther) -replace 'pmo-project-standardization v\d+\.\d+\.\d+', 'pmo-project-standardization v3.0.0')
+    $before = Get-Compliance $otherMajor "2026-11-20"
+    if ($before.Level -ne 3 -or -not ($before.Warnings | Where-Object { $_ -like 'C10 required from*' })) {
+        Fail "compliance: before its date, C10 should be a warning on an adopted repo (level $($before.Level))"
+    }
+    Test-Level $otherMajor 2 "adopted repo failing C10 once it's due"
     $empty = Join-Path $tempDir "empty-repo"
     New-Item -ItemType Directory -Path $empty | Out-Null
     Test-Level $empty 0 "empty folder"

@@ -144,6 +144,13 @@ accepts, edits or skips. Never write an answer they didn't confirm.
   `<template-dir>\scaffold\extras\docs\`, plus
   `<template-dir>\scaffold\extras\.env.example` with `security.md` if the
   project uses secrets.
+- **The repo's own formatter** (existing repo): if its CI or scripts check
+  the formatting of Markdown or JSON (for example `prettier --check .`),
+  run its formatter on the added files and then its check, so the
+  adoption PR doesn't fail CI. Don't reformat any file the repo already had.
+- **The repo's own style rules:** if its `CLAUDE.md`, `AGENTS.md` or
+  contributing guide sets rules for prose (for example "no em dashes"),
+  follow them in everything you write there.
 
 ## 4. Commit
 

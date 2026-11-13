@@ -148,6 +148,7 @@
       "path": "CLAUDE.md",
       "if_exists": true,
       "pattern": "(?m)^\\s*@AGENTS\\.md\\s*$",
+      "applies_if": { "path": "AGENTS.md", "pattern": "\\*\\*Standard:\\*\\*" },
       "fix": "Add '@AGENTS.md' as the first line of CLAUDE.md, or Claude Code never loads AGENTS.md."
     },
     {
