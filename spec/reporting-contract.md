@@ -11,7 +11,8 @@ docs. Background: [ideas/portfolio-reporting.md](../ideas/portfolio-reporting.md
 ## Rules
 
 - **Store only what the repo can't tell by itself.** Last activity, open
-  issues and PRs, template version (from `AGENTS.md`) and compliance level
+  issues and PRs, standard version (the `**Standard:**` line in
+  `AGENTS.md`) and compliance level
   are worked out by the portfolio scan. A repo never declares its own
   compliance.
 - **Skills write it, people don't have to.** `/new-project`, `/report` and

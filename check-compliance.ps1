@@ -107,7 +107,8 @@ function Test-ComplianceCheck($check, $repo) {
 }
 
 # Runs every check and works out the level. Returns Level, LevelName,
-# Version (from AGENTS.md, or $null), Results (one per check) and Warnings.
+# Version (from AGENTS.md's Standard line, or a v1 Template version stamp,
+# or $null), Results (one per check) and Warnings.
 function Get-Compliance($repo, $today) {
     $registry = (Read-Utf8 (Join-Path $complianceSpecDir "compliance-checks.json")) | ConvertFrom-Json
     $results = @(foreach ($check in $registry.checks) {
@@ -149,11 +150,17 @@ function Get-Compliance($repo, $today) {
         }
     }
 
+    # Version: the v2 Standard line, or a v1 project's Template version stamp
     $version = $null
     $agents = Join-Path $repo "AGENTS.md"
     if (Test-Path -LiteralPath $agents) {
-        $match = [regex]::Match((Read-Utf8 $agents), 'Template version: ([^*\s]+)')
+        $text = Read-Utf8 $agents
+        $match = [regex]::Match($text, '\*\*Standard:\*\* pmo-project-standardization (v[^*\s]+)')
         if ($match.Success) { $version = $match.Groups[1].Value }
+        else {
+            $match = [regex]::Match($text, 'Template version: ([^*\s]+)')
+            if ($match.Success) { $version = "$($match.Groups[1].Value) (v1 template)" }
+        }
     }
 
     [pscustomobject]@{
@@ -174,7 +181,7 @@ if ($MyInvocation.InvocationName -ne '.') {
     $report.Results | Format-Table -AutoSize Id, Severity,
         @{ Name = 'Result'; Expression = { if ($null -eq $_.Pass) { 'n/a' } elseif ($_.Pass) { 'pass' } else { 'FAIL' } } },
         Title | Out-Host
-    $versionText = if ($report.Version) { $report.Version } else { 'not stamped' }
-    Write-Host "Level $($report.Level) - $($report.LevelName) (template version: $versionText)" -ForegroundColor Cyan
+    $versionText = if ($report.Version) { $report.Version } else { 'none' }
+    Write-Host "Level $($report.Level) - $($report.LevelName) (standard version: $versionText)" -ForegroundColor Cyan
     foreach ($w in $report.Warnings) { Write-Host "WARN  $w" -ForegroundColor Yellow }
 }

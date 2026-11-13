@@ -13,7 +13,10 @@
       - -ReportOnly adds portfolio.json and nothing else
       - portfolio.json (and the example in spec/reporting-contract.md) is
         valid JSON and fits spec/portfolio.schema.json
-      - compliance levels (v1 checks until build step 5);
+      - compliance (spec v2): new and -IntoExisting projects reach level 3,
+        -ReportOnly level 1, a v1.5.1 project level 1 with its v1-only
+        checks applied (and n/a on v2 projects); W1 warns about a CLAUDE.md
+        without '@AGENTS.md', W4 about a v1 skill copy;
         spec/compliance-checks.json is well formed
       - update-plan.ps1, on a v1 project generated from the v1.5.1 tag,
         sorts files into ADD / REPLACE / MERGE / UP-TO-DATE and detects an
@@ -71,6 +74,11 @@ function Test-Level($folder, $expected, $label) {
         $failed = ($report.Results | Where-Object { $_.Pass -eq $false } | ForEach-Object { $_.Id }) -join ', '
         Fail "${label}: compliance level $($report.Level), expected $expected (failing: $failed)"
     }
+}
+
+# True when the folder's compliance report has a warning from that check
+function Test-Warning($folder, $id) {
+    [bool](@((Get-Compliance $folder "2999-01-01").Warnings) | Where-Object { $_ -like "$id *" })
 }
 
 # Collapse whitespace and line breaks so wrapping doesn't matter
@@ -193,11 +201,23 @@ try {
     }
 
     # --- 3. Compliance levels ------------------------------------------
-    # Until the v2 compliance checks (build step 5), fresh v2 projects only
-    # earn level 1: the v1 checks look for the v1 docs
-    Test-Level $project 1 "new project"
-    Test-Level $existing 1 "-IntoExisting repo"
+    # Fresh projects pass every required check; the levels below them work
+    Test-Level $project 3 "new project"
+    Test-Level $existing 3 "-IntoExisting repo"
     Test-Level $reportRepo 1 "-ReportOnly repo"
+
+    # Warnings: a CLAUDE.md without the import line (W1), until it gets one;
+    # a v1 copy of a skill in a v2 project (W4)
+    if (-not (Test-Warning $existing 'W1')) { Fail "compliance: CLAUDE.md without '@AGENTS.md' didn't warn (W1)" }
+    Write-Utf8 (Join-Path $existing "CLAUDE.md") "@AGENTS.md`n# Notes`n"
+    if (Test-Warning $existing 'W1') { Fail "compliance: CLAUDE.md with '@AGENTS.md' still warns (W1)" }
+    if (Test-Warning $project 'W4') { Fail "compliance: fresh project warns about old skill copies (W4)" }
+    $shadowed = Join-Path $tempDir "shadowed"
+    Copy-Item $project $shadowed -Recurse
+    New-Item -ItemType Directory -Path (Join-Path $shadowed ".claude\skills\story") -Force | Out-Null
+    Write-Utf8 (Join-Path $shadowed ".claude\skills\story\SKILL.md") "---`nname: story`n---`n"
+    if (-not (Test-Warning $shadowed 'W4')) { Fail "compliance: a .claude/skills/story copy didn't warn (W4)" }
+    Test-Level $shadowed 3 "project with an old skill copy (warning only)"
     $empty = Join-Path $tempDir "empty-repo"
     New-Item -ItemType Directory -Path $empty | Out-Null
     Test-Level $empty 0 "empty folder"
@@ -222,6 +242,13 @@ try {
     git -C $v1 tag v1.5.1
     & (Join-Path $v1 "new-project.ps1") -Name "Old Project" -Destination $tempDir -Hosting github | Out-Null
     $old = Join-Path $tempDir "old-project"
+    # Under the v2 spec a v1 project reports (level 1) but isn't adopted,
+    # and its v1-only checks apply to it
+    Test-Level $old 1 "v1.5.1 project"
+    $c3 = (Get-Compliance $old "2999-01-01").Results | Where-Object { $_.Id -eq 'C3' }
+    if ($c3.Pass -ne $true) { Fail "compliance: v1-only check C3 should apply to and pass on a v1 project" }
+    $c3New = (Get-Compliance $project "2999-01-01").Results | Where-Object { $_.Id -eq 'C3' }
+    if ($null -ne $c3New.Pass) { Fail "compliance: v1-only check C3 should be n/a on a v2 project" }
     $skillsDir = Join-Path $old ".claude\skills"
     Write-Utf8 (Join-Path $skillsDir "report\SKILL.md") (Get-TemplateFileAt "v1.2.0" "project-template/.claude/skills/report/SKILL.md")
     Remove-Item (Join-Path $skillsDir "wrap-up\SKILL.md")
