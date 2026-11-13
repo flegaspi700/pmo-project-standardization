@@ -30,8 +30,8 @@ them (the agent suggests one when the project grows into it):
 | `docs/budget.md` | It costs money |
 | `docs/manual-tests.md` | Things the automated tests can't cover |
 
-Dropped as separate files: the Gantt plan (phases become headings in
-`requirements.md`), status report (replaced by `portfolio.json` and the
+Dropped as separate files: the Gantt plan (phases become a Phases table
+at the top of `requirements.md`), status report (replaced by `portfolio.json` and the
 dashboard), prompt log, glossary and tech-stack doc (the stack becomes a
 decision in `decisions.md` plus the commands in `AGENTS.md`).
 
