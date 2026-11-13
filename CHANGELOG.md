@@ -7,6 +7,9 @@ projects get that older ones don't.
 ## Unreleased (v2 in progress)
 
 - **`standard/`** (v2 build step 2): the rules, kept once in this repo instead of copied into every project. One file per topic: requirements, decisions, coding, testing, git, security, sessions and reporting, plus accessibility and cost for projects they apply to. Taken from the v1 `AGENTS.md` and docs 01, 02, 05-07, 10, 12-16, with the duplication between `AGENTS.md` and the docs removed. Not used by projects yet: `project-template/` is unchanged until v2.0.0.
+- **v2 skills** (build step 3): `/a11y-check`, `/brainstorm`, `/breakdown`, `/decide`, `/fix-bug`, `/report`, `/security-check`, `/stack`, `/story` and `/wrap-up` in `skills/`, installed once for the user instead of copied into each project. They use the v2 project files (`docs/requirements.md`, `docs/decisions.md`, `docs/session-log.md`, and the extras when present) and read the rules from `standard/`. Each runs `skills/preflight.md` first: it stops in a repo without a `Standard:` line (offering to adopt the standard) or in a v1 project (pointing to its own skills), and reads the rules as they were at the project's version: the local copy, then `git show` at the tag, then GitHub. `/report` no longer writes a status report doc: it updates `portfolio.json`, and records a phase retrospective in the session log.
+- `install-skills.ps1`: links every skill in `skills/` into `%USERPROFILE%\.claude\skills\` as junctions; never overwrites, `-DryRun` previews.
+- `tests/check-template.ps1`: checks every v2 skill runs the preflight and looks itself up by its own name, and exercises `install-skills.ps1` against a throwaway profile.
 
 ## v1.5.1 (2026-10-25)
 

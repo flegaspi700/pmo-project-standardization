@@ -158,6 +158,10 @@ contract `portfolio.json` (v1.3.0), and the
 | `new-project.ps1` | Copies `project-template` to a new folder, fills in the name and hosting (`-Hosting local\|github`, default local), runs `git init` on `main`. `-IntoExisting` adds the template to a repo you already cloned; `-DryRun` previews. |
 | `skills/new-project/` | Source of the `/new-project` Claude Code command (user level). |
 | `skills/update-template/` | Source of the `/update-template` command (user level): brings an existing project up to the newest template version. |
+| `standard/` | **v2, in progress:** the rules, kept once here instead of copied into each project. See [`standard/README.md`](standard/README.md). |
+| `skills/<name>/`, `skills/preflight.md` | **v2, in progress:** the workflow commands (`/story`, `/report`, ...) installed once for the user. Each runs `preflight.md` first: checks the repo is on the standard and reads the rules at the project's version. v1 projects keep using their own copies in `.claude/skills/`. |
+| `install-skills.ps1` | Links every command in `skills/` into `%USERPROFILE%\.claude\skills\`. Never overwrites; `-DryRun` previews. |
+| `DECISIONS.md` | Design decisions about the template itself. |
 | `update-plan.ps1` | Read-only: finds a project's template version and lists what to add, replace or merge to reach the newest one. Used by `/update-template`. |
 | `tests/check-template.ps1` | Automated check of the template (see [Quality](#quality)). Run it before opening a PR. |
 | `check-compliance.ps1` | Rates a local repo against the standard: each check, the level, warnings. Read-only. |
@@ -202,6 +206,12 @@ command, so edits to its `SKILL.md` take effect immediately:
 New-Item -ItemType Junction -Path "$env:USERPROFILE\.claude\skills\new-project" -Target "<path-to-this-repo>\skills\new-project"
 New-Item -ItemType Junction -Path "$env:USERPROFILE\.claude\skills\update-template" -Target "<path-to-this-repo>\skills\update-template"
 ```
+
+**v2 commands** (in progress): `.\install-skills.ps1` links every command
+in `skills/` the same way, once per machine. It never overwrites a name
+that already exists; run `.\install-skills.ps1 -DryRun` first to see what
+it would do. In a v1 project, its own copy in `.claude\skills\` may be the
+one that runs, so install these once the projects you use are on v2.
 
 ### Changing the template
 

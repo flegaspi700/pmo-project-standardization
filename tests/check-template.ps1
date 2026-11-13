@@ -17,6 +17,9 @@
       - relative Markdown links and `docs/NN-*.md` references resolve
       - every SKILL.md has frontmatter with a name matching its folder and
         a description
+      - every v2 skill in skills\ runs skills\preflight.md and looks itself
+        up by its own name; install-skills.ps1 links every skill and a
+        second run changes nothing
       - the brainstorm steps copied into /new-project still match /brainstorm
       - every file is valid UTF-8 with no garbled characters
 
@@ -237,6 +240,54 @@ foreach ($file in $skillFiles) {
     if ($frontmatter -notmatch '(?m)^description:\s*\S') {
         Fail "${relative}: missing description"
     }
+}
+
+# --- 6b. v2 skills run the preflight -------------------------------------
+# Every skill in skills\ except the two template commands must read
+# skills\preflight.md, and look itself up by its own name (a copy-pasted
+# name would resolve the wrong junction).
+if (-not (Test-Path (Join-Path $root "skills\preflight.md"))) {
+    Fail "skills/preflight.md is missing"
+}
+$v2Skills = @(Get-ChildItem (Join-Path $root "skills") -Directory | Where-Object {
+    (Test-Path (Join-Path $_.FullName "SKILL.md")) -and $_.Name -notin 'new-project', 'update-template'
+})
+foreach ($skill in $v2Skills) {
+    $text = Read-Text (Join-Path $skill.FullName "SKILL.md")
+    if (-not $text.Contains('<template-dir>\skills\preflight.md')) {
+        Fail "skills/$($skill.Name)/SKILL.md: doesn't read <template-dir>\skills\preflight.md"
+    }
+    if (-not $text.Contains(".claude\skills\$($skill.Name)`"")) {
+        Fail "skills/$($skill.Name)/SKILL.md: the template-folder lookup doesn't use its own name"
+    }
+}
+
+# --- 6c. install-skills.ps1 -------------------------------------------------
+# Installs into a throwaway profile. Junctions are removed one by one with
+# DirectoryInfo.Delete(): a recursive delete could follow them into this repo.
+$fakeProfile = Join-Path ([System.IO.Path]::GetTempPath()) ("skills-check-" + [guid]::NewGuid().ToString("N").Substring(0, 8))
+$realProfile = $env:USERPROFILE
+try {
+    $env:USERPROFILE = $fakeProfile
+    & (Join-Path $root "install-skills.ps1") | Out-Null
+    $installed = Join-Path $fakeProfile ".claude\skills"
+    foreach ($skill in Get-ChildItem (Join-Path $root "skills") -Directory | Where-Object { Test-Path (Join-Path $_.FullName "SKILL.md") }) {
+        $link = Get-Item (Join-Path $installed $skill.Name) -Force -ErrorAction SilentlyContinue
+        if (-not $link -or $link.LinkType -ne 'Junction' -or (@($link.Target)[0].TrimEnd('\') -ne $skill.FullName.TrimEnd('\'))) {
+            Fail "install-skills.ps1: no junction for '$($skill.Name)' pointing at skills\$($skill.Name)"
+        }
+    }
+    $again = & (Join-Path $root "install-skills.ps1") 6>&1 | Out-String
+    if ($again -notmatch 'Linked 0 skill\(s\), skipped 0') {
+        Fail "install-skills.ps1: a second run should change nothing"
+    }
+}
+finally {
+    $env:USERPROFILE = $realProfile
+    if (Test-Path (Join-Path $fakeProfile ".claude\skills")) {
+        Get-ChildItem (Join-Path $fakeProfile ".claude\skills") -Force | Where-Object { $_.LinkType -eq 'Junction' } | ForEach-Object { $_.Delete() }
+    }
+    if (Test-Path $fakeProfile) { Remove-Item $fakeProfile -Recurse -Force }
 }
 
 # --- 7. Brainstorm steps in /new-project match /brainstorm ---------------
