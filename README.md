@@ -1,130 +1,139 @@
 # PMO Project Standardization
 
-**A PMO-style project standard for AI-assisted software development:
-every project starts with the same documents, workflow and quality gates,
+**A PMO-style project standard for AI-assisted software development: every
+project is planned, built, tested, secured and reported the same way,
 whether a person or an AI coding agent is doing the work.**
 
 AI coding agents (Claude Code, Codex and others) can write a lot of code
-fast, but on their own they skip the parts a project office cares about:
-a clear scope, recorded decisions, tests, security and cost. Each project
+fast, but on their own they skip the parts a project office cares about: a
+clear scope, recorded decisions, tests, security and cost. Each project
 ends up documented differently, or not at all, so nobody can compare them
 or report on them.
 
-This repo is the fix: a reusable project template plus a one-command setup
-that gives every new or existing repo the same structure. The agent is
-told, in writing, how to plan, build, test and report, and the project
-records it all in predictable places.
+This repo is the fix: one written standard, kept here, and a one-command
+setup that puts any new or existing repo on it. Each project carries only
+what is specific to it, plus a line saying which version of the standard
+it follows.
 
-**Status:** in use for new projects (current version in
-[`CHANGELOG.md`](CHANGELOG.md)). Next phase: roll the standard out across
-existing repos and build a portfolio health dashboard
-([roadmap](#roadmap)).
+**Status:** v2 (current version in [`CHANGELOG.md`](CHANGELOG.md)). Next:
+roll the standard out across existing repos and build a portfolio health
+dashboard ([roadmap](#roadmap)).
 
 ---
 
 ## The problem it solves
 
-| Without a standard | With this template |
+| Without a standard | With this standard |
 |---|---|
-| Each repo has its own (or no) docs | Same 17 docs in the same order in every repo |
-| Scope lives in someone's head | Vision → Epic → Feature → Story with IDs and a Definition of Done |
-| "Why did we do it this way?" is lost | Trade-offs logged as decision records with the options considered |
-| The AI agent picks its own process | `AGENTS.md` gives the agent the rules: test-first, simplest code, ask before adding cost |
-| Status means asking around | Status report, session log and plan (Gantt) in known files, plus a machine-readable `portfolio.json` per repo |
-| Security, accessibility and budget come up late | Each has a checklist doc and a command from day one |
+| Each repo has its own (or no) docs | The same few files in every repo, in the same places |
+| Scope lives in someone's head | Vision → Epic → Feature → Story with IDs and one Definition of Done |
+| "Why did we do it this way?" is lost | Trade-offs logged as decision records, with the options considered |
+| The AI agent picks its own process | The agent follows written rules: test-first, simplest code, the user decides, no cost without a decision |
+| Status means asking around | A machine-readable `portfolio.json` in every repo, kept current by the agent, with judgment calls from a person |
+| Every repo has its own copy of the rules, drifting apart | The rules live once, versioned; a repo pins the version it follows |
 
-## What every project gets
+## How it's built
 
-**1. A documented lifecycle (`project-template/docs/`)**
+**1. The standard (`standard/`)**: the rules, written once.
 
-| Phase | Documents |
+| File | Covers |
 |---|---|
-| Initiate | `00-vision` |
-| Plan | `01-requirements` (epics, features, stories, NFRs), `02-architecture`, `03-tech-stack`, `04-project-plan` (Mermaid Gantt) |
-| Execute | `05-decisions-log` (ADRs), `06-coding-conventions`, `07-testing-checklist`, `12-manual-tests`, `13-git-workflow` |
-| Monitor | `09-status-report`, `10-session-log`, `16-budget` (money and hours) |
-| Govern | `14-security` (threat model lite), `15-accessibility` (WCAG 2.2 AA), `11-glossary`, `08-prompt-log` |
+| `requirements.md` | Epics, features, stories, phases, the Definition of Done, NFRs, bugs |
+| `decisions.md` | When a choice needs options compared, and how it's logged |
+| `coding.md` | Simplicity, files, comments, errors, logging, encoding |
+| `testing.md` | Test-first, no weakening tests, regression tests for bugs, checklists |
+| `git.md` | One branch per story, Conventional Commits, the user merges; local or GitHub |
+| `security.md` | Secrets, dependencies, input, privacy, AI-agent risks, threat model |
+| `sessions.md` | Working with an agent, handoffs between sessions, reporting |
+| `accessibility.md`, `cost.md` | For projects with a UI, or that cost money |
 
-Projects are **right-sized**: a short interview classifies a project as
-Small or Standard, and docs it doesn't need become marked one-line stubs
-(never deleted, so references stay valid and the doc can be switched on
-later).
+Versioned by git tag: a project on v2.0.0 always reads the v2.0.0 rules, so
+a change to the standard never changes a project's rules by surprise.
 
-**2. Rules for the AI agent (`AGENTS.md`)**
+**2. What a project holds**: five files, about 120 lines to start.
 
-One file the agent reads at the start of every session: the current phase,
-which docs are active, architecture rules it must not break, and how to
-work: test-first, one branch and PR per story, Conventional Commits with
-story IDs, no new dependency or cost without a logged decision.
+| File | Holds |
+|---|---|
+| `AGENTS.md` | What it is, the standard version, hosting, commands, seven core rules, project-specific notes |
+| `portfolio.json` | Status for the portfolio: owner, sponsor, program, lifecycle, health, phase, progress, risks, blockers, call-outs, budget ([contract](spec/reporting-contract.md)) |
+| `docs/requirements.md` | Vision, phases, epics, features, stories, NFRs, bugs |
+| `docs/decisions.md` | Decision records |
+| `docs/session-log.md` | Handoff notes between sessions |
 
-**3. A portfolio report card (`portfolio.json`)**
+Extra docs (security, accessibility, architecture, budget, manual tests)
+are added only when the project grows into them.
 
-What the project reports upward, in a fixed format any tool can read:
-owner, sponsor, program, lifecycle, health (🟢/🟡/🔴), phase, progress,
-risks, blockers, call-outs for leadership, and budget. `/report` and
-`/wrap-up` keep it current, and judgment calls (health, risks, call-outs)
-always come from a person. Contract and JSON Schema:
-[`spec/`](spec/reporting-contract.md).
-
-**4. Repeatable workflow commands (`.claude/skills/`)**
+**3. Workflow commands** for Claude Code, installed once per machine, used
+in every project:
 
 | Command | What it does |
 |---|---|
-| `/brainstorm` | Explore an idea and compare options before anything is built |
-| `/breakdown` | Turn the vision into epics, features and stories |
+| `/new-project` | Start a project, put an existing repo on the standard, or add only `portfolio.json` |
+| `/brainstorm` | Explore an idea and compare directions before anything is built |
+| `/breakdown` | Turn the vision into phases, epics, features and stories |
 | `/stack` | Recommend a tech stack with 2–3 options; the user decides |
-| `/decide` | Record a design decision with the options table |
-| `/story` | Build a story test-first on its own branch, then check the Definition of Done |
-| `/fix-bug` | Log a bug with an ID, reproduce it with a failing test, then fix it |
-| `/report` | Write a status report from the docs |
+| `/decide` | Compare options for a design choice and log the decision |
+| `/story` | Build a story (or a whole feature) test-first on its own branch, then check the Definition of Done |
+| `/fix-bug` | Log a bug, reproduce it with a failing test, then fix it |
+| `/report` | Update `portfolio.json`: counts from the docs, health and risks from the user |
 | `/security-check`, `/a11y-check` | Run the security and accessibility checklists |
 | `/wrap-up` | End-of-session handoff: session log, time spent, anything unfinished |
+
+Every command first checks that the repo is on the standard and reads the
+rules at the repo's version ([`skills/preflight.md`](skills/preflight.md)).
 
 ## How it works
 
 ```mermaid
 flowchart LR
-    A["/new-project"] --> B{New or existing?}
-    B -->|new| C[Optional brainstorm]
-    B -->|existing GitHub repo| D[Preview files to add,<br/>never overwrite]
-    C --> E[new-project.ps1<br/>copies template, fills placeholders]
+    A["/new-project"] --> B{What for?}
+    B -->|new project| C[Optional brainstorm]
+    B -->|existing repo| D[Branch, preview,<br/>never overwrite]
+    B -->|dashboard only| R[portfolio.json only]
+    C --> E[new-project.ps1<br/>copies the five files]
     D --> E
-    E --> F[Vision interview]
-    F --> G[Size: Small or Standard<br/>pick active docs]
-    G --> H["/breakdown → /story → /report"]
+    E --> F[Vision drafted,<br/>user confirms]
+    F --> H["/breakdown → /story → /report"]
+    R --> P[(Portfolio)]
+    H --> P
 ```
 
-- **New project:** `/new-project` (a Claude Code command) asks a few
-  questions, runs `new-project.ps1`, interviews the user for the vision, and
-  sizes the project.
-- **Existing repo:** picks a repo from GitHub, clones it, previews which
-  files would be added, then adds the template on its own branch. It
-  records the existing stack instead of proposing a new one.
-- **Hosting:** each project is `local` or `github`. Local projects get the
-  same branch-per-story discipline without pushes or PRs.
+- **New project:** a few questions, the files, a one-paragraph vision the
+  user confirms, then `/breakdown` and `/stack`.
+- **Existing repo:** works on a branch and opens a PR. Only missing files
+  are added; the existing stack is recorded, not replaced; no stories are
+  written for code that already exists. A repo with a `CLAUDE.md` gets one
+  line, `@AGENTS.md`, so Claude Code loads the standard, and only with the
+  user's yes.
+- **Dashboard only:** adds `portfolio.json` and nothing else, for repos
+  (like course exercises) that should be visible but don't need the rest.
+- **Hosting:** each project is `local` or `github`. Local projects keep the
+  branch-per-story discipline without pushes or PRs.
 
 ## Design decisions
 
-- **Language-neutral.** The template contains no code; the agent recommends
-  a stack per project and the user decides.
-- **Simplest thing that works.** Every trade-off offers 2–3 options
-  including the simplest, and the choice is logged.
-- **Sized by scope, not calendar time.** With AI-assisted coding, duration
-  says little; sizing asks what the project touches (phases, network,
-  secrets, personal data).
-- **Agent-agnostic instructions.** `AGENTS.md`, not a tool-specific file,
-  so the standard isn't tied to one AI vendor.
-- **Additive on existing repos.** The standard covers docs and
-  conventions, not code layout, so adopting it never restructures working
-  code.
+Recorded with their options in [`DECISIONS.md`](DECISIONS.md).
+
+- **Shared standard, small footprint (v2).** v1 copied 33 files and about
+  2,300 lines into every repo, and adoption stalled at 2 repos. v2 keeps
+  the rules here and gives each repo about 5 files.
+- **The user decides.** Every significant choice offers 2–3 options
+  including the simplest, and the decision is logged.
+- **Language-neutral.** The standard contains no code; the agent
+  recommends a stack per project.
+- **Agent-agnostic.** `AGENTS.md`, not a tool-specific file, so the
+  standard isn't tied to one AI vendor.
+- **Additive on existing repos.** The standard covers docs and process,
+  not code layout, so adopting it never restructures working code.
 
 ## Quality
 
-- `tests/check-template.ps1` generates a fresh project and an
-  existing-repo install, then checks: no unfilled placeholders, every link
-  and doc reference resolves, every command has valid metadata, duplicated
-  instructions stay in sync, every file is valid UTF-8, and a fresh
-  project passes every required compliance check.
+- `tests/check-template.ps1` generates a new project, an existing-repo
+  adoption and a dashboard-only repo, then checks: the right files, no
+  unfilled placeholders, links resolve, existing files untouched, every
+  command has valid metadata and runs the preflight, the installer works,
+  every file is valid UTF-8, and new projects pass every required
+  compliance check.
 - `check-compliance.ps1` rates any repo against the standard (Not on
   standard, Reporting, Adopted, Current) by evidence in the repo, using the
   checks in [`spec/compliance-checks.json`](spec/compliance-checks.json).
@@ -133,20 +142,18 @@ flowchart LR
 
 ## Roadmap
 
-Done: version stamp in every new project (v1.2.0), the reporting
-contract `portfolio.json` (v1.3.0), and the
-[compliance spec](spec/compliance.md) with `check-compliance.ps1`.
+Done: the reporting contract and compliance spec (v1.3–v1.4), and v2's
+shared standard (v2.0.0).
 
-1. **Standardize existing repos.** Inventory all repos, pilot the
-   template on 2–3, feed what's learned back in.
+1. **Roll the standard out.** Move every active repo onto the standard,
+   and give course and learning repos `portfolio.json` only.
    ([notes](ideas/standardize-repos.md))
 2. **Portfolio health dashboard.** A separate project, built on this
-   standard, where a portfolio manager reviews every repo: health, owner,
-   risks, call-outs, budget and compliance.
+   standard, where a portfolio manager reviews every repo by program:
+   health, owner, progress, risks, call-outs, budget and compliance.
    ([notes](ideas/portfolio-reporting.md))
 3. **Governance extensions** once real projects need them: expanded
-   security, legal/compliance and website-launch checklists
-   ([ideas/](ideas/)).
+   security, legal and website-launch checklists ([ideas/](ideas/)).
 
 ---
 
@@ -154,26 +161,32 @@ contract `portfolio.json` (v1.3.0), and the
 
 | Path | What it is |
 |---|---|
-| `scaffold/` | **v2:** the starter files every project gets: `AGENTS.md`, `portfolio.json`, `docs/requirements.md`, `docs/decisions.md`, `docs/session-log.md`, plus `README.md` and `.gitignore`. `scaffold/extras/` holds the extra docs, added only when a project needs them. |
-| `project-template/` | **v1:** the full template v1 projects were created from. No longer used by `new-project.ps1`; kept until the v1 projects move to v2. |
-| `new-project.ps1` | **v2:** copies `scaffold/` (not the extras) to a new folder, fills in the name, hosting (`-Hosting local\|github`, default local) and standard version, runs `git init` on `main`. `-IntoExisting` adopts the standard in a repo you already cloned, `-ReportOnly` adds only `portfolio.json`; both never overwrite, and `-DryRun` previews. |
-| `skills/new-project/` | Source of the `/new-project` Claude Code command (user level): new project, existing repo, or dashboard only. |
-| `skills/update-template/` | Source of the `/update-template` command (user level): brings an existing project up to the newest template version. |
-| `standard/` | **v2, in progress:** the rules, kept once here instead of copied into each project. See [`standard/README.md`](standard/README.md). |
-| `skills/<name>/`, `skills/preflight.md` | **v2, in progress:** the workflow commands (`/story`, `/report`, ...) installed once for the user. Each runs `preflight.md` first: checks the repo is on the standard and reads the rules at the project's version. v1 projects keep using their own copies in `.claude/skills/`. |
+| `standard/` | The rules ([`standard/README.md`](standard/README.md)). |
+| `scaffold/` | The starter files a project gets, plus `README.md` and `.gitignore` for new repos. `scaffold/extras/` holds the extra docs. |
+| `skills/` | The workflow commands, and `preflight.md`, which every command runs first. |
+| `new-project.ps1` | Copies `scaffold/` (not the extras) to a new folder, fills in the name, hosting (`-Hosting local\|github`, default local) and standard version, and runs `git init`. `-IntoExisting` adopts the standard in a repo you already cloned; `-ReportOnly` adds only `portfolio.json`. Both never overwrite; `-DryRun` previews. |
 | `install-skills.ps1` | Links every command in `skills/` into `%USERPROFILE%\.claude\skills\`. Never overwrites; `-DryRun` previews. |
-| `DECISIONS.md` | Design decisions about the template itself. |
-| `update-plan.ps1` | Read-only: finds a project's template version and lists what to add, replace or merge to reach the newest one. Used by `/update-template`. |
-| `tests/check-template.ps1` | Automated check of the template (see [Quality](#quality)). Run it before opening a PR. |
 | `check-compliance.ps1` | Rates a local repo against the standard: each check, the level, warnings. Read-only. |
-| `spec/` | Specs for tools that read projects built on the standard: the reporting contract, `portfolio.json` JSON Schema, and the compliance spec and checks. Not copied into projects. |
-| `ideas/` | Ideas captured for later (not part of the template). |
-| `CHANGELOG.md` | What changed in each version (git tags `v1.0.0`, ...). |
+| `spec/` | For tools that read projects on the standard: the reporting contract, the `portfolio.json` JSON Schema, and the compliance spec and checks. |
+| `tests/check-template.ps1` | Automated checks (see [Quality](#quality)). Run before every PR. |
+| `DECISIONS.md` | Design decisions about the standard itself. |
+| `ideas/` | Ideas captured for later. |
+| `CHANGELOG.md` | What changed in each version (git tags). v1's full per-project template is at tag `v1.5.1`. |
 
 ## Quick start
 
-**Recommended:** in Claude Code, from any folder, type `/new-project` and
-answer the questions.
+**1. Install the commands** (once per machine, from this folder):
+
+```powershell
+.\install-skills.ps1 -DryRun   # see what it would link
+.\install-skills.ps1
+```
+
+Each command becomes a junction (folder shortcut) to this repo, so a change
+here reaches every project at once. Existing names are never overwritten.
+
+**2. Start or adopt a project:** in Claude Code, from any folder, type
+`/new-project` and answer the questions.
 
 **Or by hand (PowerShell):**
 
@@ -191,37 +204,15 @@ answer the questions.
 If PowerShell blocks scripts:
 `powershell -ExecutionPolicy Bypass -File .\new-project.ps1 -Name "Guess Game"`
 
-Then start Claude Code inside the new folder and run `/breakdown`.
+### Moving a project to a newer version
 
-### Updating an existing project
+Read the [`CHANGELOG.md`](CHANGELOG.md) entries since the project's
+version: each says what a project must do, if anything. Make those changes
+on a branch, update the `**Standard:**` line in `AGENTS.md`, run
+`check-compliance.ps1`, and open a PR.
 
-Inside a project that already uses the template, run `/update-template`.
-It finds the project's template version, shows what's new since then, adds
-or replaces the files the project never changed, merges the template's
-changes into the ones it did change (keeping the project's own edits),
-fills in `portfolio.json` with you, and checks the result with
-`check-compliance.ps1`. Everything happens on a branch; nothing is merged
-without asking.
+### Changing the standard
 
-### Installing the commands
-
-Claude Code finds user-level commands in `%USERPROFILE%\.claude\skills\`.
-Point a **junction** (folder shortcut) there at this repo for each
-command, so edits to its `SKILL.md` take effect immediately:
-
-```powershell
-New-Item -ItemType Junction -Path "$env:USERPROFILE\.claude\skills\new-project" -Target "<path-to-this-repo>\skills\new-project"
-New-Item -ItemType Junction -Path "$env:USERPROFILE\.claude\skills\update-template" -Target "<path-to-this-repo>\skills\update-template"
-```
-
-**v2 commands** (in progress): `.\install-skills.ps1` links every command
-in `skills/` the same way, once per machine. It never overwrites a name
-that already exists; run `.\install-skills.ps1 -DryRun` first to see what
-it would do. In a v1 project, its own copy in `.claude\skills\` may be the
-one that runs, so install these once the projects you use are on v2.
-
-### Changing the template
-
-Edit files in `project-template/`, run `tests/check-template.ps1`, and open
-a PR. Changes apply to projects created afterwards; existing projects keep
-their copy.
+Edit `standard/`, `scaffold/` or `skills/`, run `tests/check-template.ps1`,
+add a CHANGELOG entry, and open a PR (rules in
+[`standard/README.md`](standard/README.md) → Changing the standard).

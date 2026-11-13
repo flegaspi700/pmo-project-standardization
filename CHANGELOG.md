@@ -1,10 +1,40 @@
 # Changelog
 
-Notable changes to the project template. Versions are git tags (`v1.0.0`, ...).
-Projects keep the copy they were created from, so this list shows what newer
-projects get that older ones don't.
+Notable changes to the standard. Versions are git tags (`v1.0.0`, ...). From
+v2, a project pins the version it follows in `AGENTS.md`
+(`**Standard:** pmo-project-standardization vX.Y.Z`); each entry says what a
+project must do to move to that version, if anything.
 
-## Unreleased (v2 in progress)
+## v2.0.0 (2026-11-13)
+
+**Shared standard, small footprint.** The rules now live once in this repo
+(`standard/`), the workflow commands are installed once per machine
+(`skills/`, `install-skills.ps1`), and each project gets five starter files
+instead of 33. Decision: `DECISIONS.md`, 2026-11-13.
+
+**Breaking:**
+- `project-template/`, `/update-template` and `update-plan.ps1` are removed.
+  v1 projects keep their own copy of the v1 rules and skills; the v1
+  template and tools stay available at tag `v1.5.1`.
+- Compliance spec version 2: v1 projects rate as level 1 (Reporting) until
+  they move to v2. C8, C9 and C10 are required from 2026-12-13.
+
+**Moving a v1 project to v2** (on a branch, then a PR):
+1. Replace `AGENTS.md` with `scaffold/AGENTS.md`; move the project's own
+   content (what it is, commands, architecture rules, things not to do)
+   into its sections.
+2. Merge `docs/00-vision.md`, `01-requirements.md` and `04-project-plan.md`
+   into `docs/requirements.md` (vision, Phases table, epics to stories,
+   NFRs, bugs); rename `05-decisions-log.md` to `decisions.md` and
+   `10-session-log.md` to `session-log.md`.
+3. Docs with real project content become extras (`architecture.md`,
+   `security.md`, `accessibility.md`, `budget.md`, `manual-tests.md`); the
+   tech stack becomes a decision entry if it isn't one already. Delete the
+   rest of the numbered docs, `.claude/skills/` (the v1 copies; W4) and
+   `.github/pull_request_template.md`. Git keeps the history.
+4. `check-compliance.ps1` should show level 3.
+
+**Release notes, by build step:**
 
 - **`standard/`** (v2 build step 2): the rules, kept once in this repo instead of copied into every project. One file per topic: requirements, decisions, coding, testing, git, security, sessions and reporting, plus accessibility and cost for projects they apply to. Taken from the v1 `AGENTS.md` and docs 01, 02, 05-07, 10, 12-16, with the duplication between `AGENTS.md` and the docs removed. Not used by projects yet: `project-template/` is unchanged until v2.0.0.
 - **v2 skills** (build step 3): `/a11y-check`, `/brainstorm`, `/breakdown`, `/decide`, `/fix-bug`, `/report`, `/security-check`, `/stack`, `/story` and `/wrap-up` in `skills/`, installed once for the user instead of copied into each project. They use the v2 project files (`docs/requirements.md`, `docs/decisions.md`, `docs/session-log.md`, and the extras when present) and read the rules from `standard/`. Each runs `skills/preflight.md` first: it stops in a repo without a `Standard:` line (offering to adopt the standard) or in a v1 project (pointing to its own skills), and reads the rules as they were at the project's version: the local copy, then `git show` at the tag, then GitHub. `/report` no longer writes a status report doc: it updates `portfolio.json`, and records a phase retrospective in the session log.
@@ -14,7 +44,7 @@ projects get that older ones don't.
 - **`new-project.ps1` rewritten for v2:** copies `scaffold/` instead of `project-template/` and stamps `**Standard:** pmo-project-standardization <version>` (v2.0.0 until that release, with a warning). New `-ReportOnly` adds only `portfolio.json`. Flags a `CLAUDE.md` that needs `@AGENTS.md`, but never edits it. Works in a template folder without git tags.
 - **`/new-project` rewritten for v2** (about 190 lines, from 360): four choices (new project; new project with a brainstorm; put an existing repo on the standard; dashboard only). No sizing step and no eight-section interview: it drafts the vision paragraph in one go and proposes which extras apply. Existing repos go on a `chore/adopt-standard` branch and a PR; a `CLAUDE.md` gets `@AGENTS.md` as its first line, only on a yes. Ends by checking the v2 skills are installed.
 - `tests/check-template.ps1`: tests the v2 starter files, `-IntoExisting` (with a `CLAUDE.md` that must stay unchanged) and `-ReportOnly`; the `/update-template` planner tests now generate their v1 project from the v1.5.1 tag. Fresh v2 projects are expected at compliance level 1 until the v2 checks arrive (build step 5).
-- **Compliance spec version 2** (build step 5): **Adopted** is now `portfolio.json` (C4) + the Hosting line (C2) + the `**Standard:**` line (C8, new) + `docs/requirements.md`, `decisions.md` and `session-log.md` (C9, new). **Current** adds C10 (new): the Standard line names v2. C8, C9 and C10 are required from 2026-12-13 (provisional: set to the v2.0.0 release date + 30 days at release). The v1 layout checks (C1, C3, C6, C7, W2) become optional and apply only to v1 projects, so v1 projects show as Reporting until they move to v2. W1 now needs an `@AGENTS.md` line in `CLAUDE.md`, not just a mention. New warnings: W3 (unfilled placeholders in `docs/requirements.md`) and W4 (v1 copies of the standard's skills in `.claude/skills/`, which would run instead of the installed ones). `check-compliance.ps1` shows the standard version from the Standard line, or the v1 stamp marked "(v1 template)".
+- **Compliance spec version 2** (build step 5): **Adopted** is now `portfolio.json` (C4) + the Hosting line (C2) + the `**Standard:**` line (C8, new) + `docs/requirements.md`, `decisions.md` and `session-log.md` (C9, new). **Current** adds C10 (new): the Standard line names v2. C8, C9 and C10 are required from 2026-12-13 (v2.0.0 release + 30 days). The v1 layout checks (C1, C3, C6, C7, W2) become optional and apply only to v1 projects, so v1 projects show as Reporting until they move to v2. W1 now needs an `@AGENTS.md` line in `CLAUDE.md`, not just a mention. New warnings: W3 (unfilled placeholders in `docs/requirements.md`) and W4 (v1 copies of the standard's skills in `.claude/skills/`, which would run instead of the installed ones). `check-compliance.ps1` shows the standard version from the Standard line, or the v1 stamp marked "(v1 template)".
 
 ## v1.5.1 (2026-10-25)
 

@@ -160,7 +160,7 @@
       "paths": ["docs/requirements.md"],
       "pattern": "<[A-Za-z][^<>`\\r\\n]*\\s[^<>`\\r\\n]*>",
       "applies_if": { "path": "AGENTS.md", "pattern": "\\*\\*Standard:\\*\\*" },
-      "fix": "Fill in the vision and the Phases table (/new-project fills the vision; /breakdown the phases)."
+      "fix": "Fill in the remaining <...> placeholders in docs/requirements.md: vision, phases, NFRs (/new-project drafts the vision; /breakdown the phases)."
     },
     {
       "id": "W4",
