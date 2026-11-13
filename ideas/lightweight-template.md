@@ -44,7 +44,6 @@ decision in `decisions.md` plus the commands in `AGENTS.md`).
 
 **Standard:** pmo-project-standardization v2.0.0
 **Hosting:** github
-**Program:** <group on the dashboard>
 
 ## Commands
 - Run: ...
@@ -64,7 +63,8 @@ decision in `decisions.md` plus the commands in `AGENTS.md`).
 ```
 
 The core rules are the handful an agent must follow even if it never opens
-the link. Everything else (conventions, testing checklist, git workflow,
+the link. (Built in step 4 as `scaffold/AGENTS.md`. The program lives only in
+`portfolio.json`, so it can't disagree between two files.) Everything else (conventions, testing checklist, git workflow,
 security, accessibility) is in the standard.
 
 ## What lives in this repo
@@ -85,9 +85,9 @@ the same rules, and the dashboard shows which projects are behind.
 2. Add the five files, never overwriting anything. Fill `AGENTS.md` and
    `requirements.md` from the README and the code; ask only what the code
    can't tell (program, hosting, health).
-3. If the repo has a `CLAUDE.md`, add one line at its top:
-   `Read AGENTS.md first: it holds this repo's standard.` That's the only
-   edit to an existing file, and it's shown before it's made.
+3. If the repo has a `CLAUDE.md`, add `@AGENTS.md` as its first line
+   (Claude Code's import syntax, so `AGENTS.md` loads with it). That's the
+   only edit to an existing file, and it's shown before it's made.
 4. PR. Nothing is merged without the user saying so.
 
 No vision interview, no sizing step, no backfilled stories for code that

@@ -19,7 +19,7 @@ project reports its status to the portfolio.
 - **Suggest, don't add.** When the project grows into an extra doc (the
   first network call, secret or dependency: `docs/security.md`; a UI:
   `docs/accessibility.md`; a cost: `docs/budget.md`), say so and offer to
-  add it.
+  add it, starting from the template's `scaffold/extras/`.
 
 ## Start of a session
 

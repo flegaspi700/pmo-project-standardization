@@ -57,14 +57,19 @@ The standard holds the rules. A project holds only what's specific to it:
 
 | File | Holds |
 |---|---|
-| `AGENTS.md` | What the project is, the standard version, hosting, program, commands, core rules, project-specific notes |
-| `portfolio.json` | Its status for the portfolio ([reporting contract](../spec/reporting-contract.md)) |
+| `AGENTS.md` | What the project is, the standard version, hosting, commands, core rules, project-specific notes |
+| `portfolio.json` | Its status for the portfolio, including its program ([reporting contract](../spec/reporting-contract.md)) |
 | `docs/requirements.md` | A one-paragraph vision, phases, epics, features, stories, NFRs, bugs |
 | `docs/decisions.md` | Its decision records |
 | `docs/session-log.md` | Handoff notes between sessions |
 
+`new-project.ps1` copies these from [`scaffold/`](../scaffold/), plus a
+`README.md` and `.gitignore` when the repo has none, and never overwrites a
+file that's already there.
+
 Extra docs, added only when the project needs them (the agent suggests one
-when the project grows into it, and never adds one silently):
+when the project grows into it, and never adds one silently). Their
+starting files are in [`scaffold/extras/`](../scaffold/extras/):
 
 | File | Add when | Rules in |
 |---|---|---|
