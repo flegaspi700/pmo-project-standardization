@@ -1,20 +1,20 @@
 {
-  "version": 1,
+  "version": 2,
   "levels": {
     "reporting": ["C4"],
-    "adopted": ["C1", "C2", "C3"]
+    "adopted": ["C4", "C2", "C8", "C9"]
   },
   "checks": [
     {
-      "id": "C1",
-      "title": "AGENTS.md has the Doc status table",
+      "id": "C8",
+      "title": "AGENTS.md names the standard version",
       "severity": "required",
-      "since": "v1.0.0",
-      "required_from": "2026-11-09",
+      "since": "v2.0.0",
+      "required_from": "2026-12-13",
       "kind": "contains",
       "path": "AGENTS.md",
-      "pattern": "(?m)^## Doc status",
-      "fix": "Add the template's AGENTS.md (/new-project, existing repo option)."
+      "pattern": "\\*\\*Standard:\\*\\* pmo-project-standardization v\\d+\\.\\d+\\.\\d+",
+      "fix": "Put the repo on the standard: /new-project, option 3 (adds AGENTS.md with the Standard line)."
     },
     {
       "id": "C2",
@@ -25,14 +25,73 @@
       "kind": "contains",
       "path": "AGENTS.md",
       "pattern": "\\*\\*Hosting: (local|github)\\*\\*",
-      "fix": "Add '**Hosting: local**' or '**Hosting: github**' to AGENTS.md -> Git."
+      "fix": "Add '**Hosting: local**' or '**Hosting: github**' under the Standard line in AGENTS.md."
+    },
+    {
+      "id": "C9",
+      "title": "The project docs exist: requirements, decisions, session log",
+      "severity": "required",
+      "since": "v2.0.0",
+      "required_from": "2026-12-13",
+      "kind": "exists",
+      "paths": [
+        "docs/requirements.md",
+        "docs/decisions.md",
+        "docs/session-log.md"
+      ],
+      "fix": "Copy the missing files from the template's scaffold/docs/."
+    },
+    {
+      "id": "C4",
+      "title": "portfolio.json exists and fits the schema",
+      "severity": "required",
+      "since": "v1.3.0",
+      "required_from": "2026-11-24",
+      "kind": "schema",
+      "path": "portfolio.json",
+      "schema": "portfolio.schema.json",
+      "fix": "Add portfolio.json (/new-project, option 4, or copy scaffold/portfolio.json), fill in name, owner and program, then run /report."
+    },
+    {
+      "id": "C10",
+      "title": "On standard v2",
+      "severity": "required",
+      "since": "v2.0.0",
+      "required_from": "2026-12-13",
+      "kind": "contains",
+      "path": "AGENTS.md",
+      "pattern": "\\*\\*Standard:\\*\\* pmo-project-standardization v2\\.\\d+\\.\\d+",
+      "fix": "Move the project to the newest standard version: update the Standard line in AGENTS.md after checking the CHANGELOG."
+    },
+    {
+      "id": "C5",
+      "title": "AGENTS.md has the UTF-8 rule",
+      "severity": "optional",
+      "since": "v1.1.0",
+      "required_from": null,
+      "kind": "contains",
+      "path": "AGENTS.md",
+      "pattern": "UTF-8 without a BOM",
+      "fix": "Add the core rule 'Text files are UTF-8 without a BOM.' to AGENTS.md."
+    },
+    {
+      "id": "C1",
+      "title": "v1: AGENTS.md has the Doc status table",
+      "severity": "optional",
+      "since": "v1.0.0",
+      "required_from": null,
+      "kind": "contains",
+      "path": "AGENTS.md",
+      "pattern": "(?m)^## Doc status",
+      "applies_if": { "path": "AGENTS.md", "pattern": "Template version: v\\d" },
+      "fix": "v1 project: move it to v2 (/new-project, option 3) instead of fixing v1 checks."
     },
     {
       "id": "C3",
-      "title": "Docs 00-16 all exist (stubs count)",
-      "severity": "required",
+      "title": "v1: docs 00-16 all exist (stubs count)",
+      "severity": "optional",
       "since": "v1.0.0",
-      "required_from": "2026-11-09",
+      "required_from": null,
       "kind": "exists",
       "paths": [
         "docs/00-vision.md",
@@ -53,67 +112,82 @@
         "docs/15-accessibility.md",
         "docs/16-budget.md"
       ],
-      "fix": "Copy the missing docs from the template; mark unneeded ones as one-line stubs."
-    },
-    {
-      "id": "C4",
-      "title": "portfolio.json exists and fits the schema",
-      "severity": "required",
-      "since": "v1.3.0",
-      "required_from": "2026-11-24",
-      "kind": "schema",
-      "path": "portfolio.json",
-      "schema": "portfolio.schema.json",
-      "fix": "Copy project-template/portfolio.json, fill in name, owner and sponsor, then run /report."
-    },
-    {
-      "id": "C5",
-      "title": "AGENTS.md has the UTF-8 rule",
-      "severity": "optional",
-      "since": "v1.1.0",
-      "required_from": null,
-      "kind": "contains",
-      "path": "AGENTS.md",
-      "pattern": "UTF-8 without a BOM",
-      "fix": "Copy the 'Text files are UTF-8 without a BOM' paragraph from the template's AGENTS.md."
+      "applies_if": { "path": "AGENTS.md", "pattern": "Template version: v\\d" },
+      "fix": "v1 project: move it to v2 (/new-project, option 3) instead of fixing v1 checks."
     },
     {
       "id": "C6",
-      "title": "AGENTS.md has a Template version line",
+      "title": "v1: AGENTS.md has a Template version line",
       "severity": "optional",
       "since": "v1.2.0",
       "required_from": null,
       "kind": "contains",
       "path": "AGENTS.md",
       "pattern": "Template version: v\\d",
-      "fix": "Add '**Template version: vX.Y.Z**' near the top of AGENTS.md."
+      "applies_if": { "path": "AGENTS.md", "pattern": "Template version:" },
+      "fix": "v1 project: move it to v2 (/new-project, option 3), which uses the Standard line instead."
     },
     {
       "id": "C7",
-      "title": "PR template present (GitHub-hosted projects)",
+      "title": "v1: PR template present (GitHub-hosted projects)",
       "severity": "optional",
       "since": "v1.0.0",
       "required_from": null,
       "kind": "exists",
       "paths": [".github/pull_request_template.md"],
-      "applies_if": { "path": "AGENTS.md", "pattern": "\\*\\*Hosting: github\\*\\*" },
-      "fix": "Copy .github/pull_request_template.md from the template."
+      "applies_if": { "path": "AGENTS.md", "pattern": "Template version: v\\d[\\s\\S]*\\*\\*Hosting: github\\*\\*" },
+      "fix": "v1 project: move it to v2 (/new-project, option 3); v2 has no PR template."
     },
     {
       "id": "W1",
-      "title": "No CLAUDE.md that hides AGENTS.md",
+      "title": "CLAUDE.md loads AGENTS.md",
       "severity": "warning",
       "since": "v1.0.0",
       "required_from": null,
       "kind": "contains",
       "path": "CLAUDE.md",
       "if_exists": true,
-      "pattern": "AGENTS\\.md",
-      "fix": "Merge anything useful into AGENTS.md, then make CLAUDE.md a one-line pointer: @AGENTS.md"
+      "pattern": "(?m)^\\s*@AGENTS\\.md\\s*$",
+      "fix": "Add '@AGENTS.md' as the first line of CLAUDE.md, or Claude Code never loads AGENTS.md."
+    },
+    {
+      "id": "W3",
+      "title": "docs/requirements.md has no unfilled placeholders",
+      "severity": "warning",
+      "since": "v2.0.0",
+      "required_from": null,
+      "kind": "absent",
+      "paths": ["docs/requirements.md"],
+      "pattern": "<[A-Za-z][^<>`\\r\\n]*\\s[^<>`\\r\\n]*>",
+      "applies_if": { "path": "AGENTS.md", "pattern": "\\*\\*Standard:\\*\\*" },
+      "fix": "Fill in the vision and the Phases table (/new-project fills the vision; /breakdown the phases)."
+    },
+    {
+      "id": "W4",
+      "title": "No old copies of the standard's skills in .claude/skills",
+      "severity": "warning",
+      "since": "v2.0.0",
+      "required_from": null,
+      "kind": "absent",
+      "paths": [
+        ".claude/skills/a11y-check/SKILL.md",
+        ".claude/skills/brainstorm/SKILL.md",
+        ".claude/skills/breakdown/SKILL.md",
+        ".claude/skills/decide/SKILL.md",
+        ".claude/skills/fix-bug/SKILL.md",
+        ".claude/skills/report/SKILL.md",
+        ".claude/skills/security-check/SKILL.md",
+        ".claude/skills/stack/SKILL.md",
+        ".claude/skills/story/SKILL.md",
+        ".claude/skills/wrap-up/SKILL.md"
+      ],
+      "pattern": "[\\s\\S]",
+      "applies_if": { "path": "AGENTS.md", "pattern": "\\*\\*Standard:\\*\\*" },
+      "fix": "Delete these v1 copies: they run instead of the installed skills (install-skills.ps1)."
     },
     {
       "id": "W2",
-      "title": "Planning docs (00, 02-04) have no unfilled placeholders",
+      "title": "v1: planning docs (00, 02-04) have no unfilled placeholders",
       "severity": "warning",
       "since": "v1.0.0",
       "required_from": null,
@@ -125,7 +199,8 @@
         "docs/04-project-plan.md"
       ],
       "pattern": "<[A-Za-z][^<>`\\r\\n]*\\s[^<>`\\r\\n]*>",
-      "fix": "Fill in the <...> placeholders (run /breakdown, /stack, or /report)."
+      "applies_if": { "path": "AGENTS.md", "pattern": "Template version: v\\d" },
+      "fix": "v1 project: move it to v2 (/new-project, option 3)."
     }
   ]
 }

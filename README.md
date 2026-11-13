@@ -154,10 +154,15 @@ contract `portfolio.json` (v1.3.0), and the
 
 | Path | What it is |
 |---|---|
-| `project-template/` | The template. Everything in it is copied into each new project: docs, `AGENTS.md`, workflow commands (`.claude/skills/`), PR template, `.gitignore`. |
-| `new-project.ps1` | Copies `project-template` to a new folder, fills in the name and hosting (`-Hosting local\|github`, default local), runs `git init` on `main`. `-IntoExisting` adds the template to a repo you already cloned; `-DryRun` previews. |
-| `skills/new-project/` | Source of the `/new-project` Claude Code command (user level). |
+| `scaffold/` | **v2:** the starter files every project gets: `AGENTS.md`, `portfolio.json`, `docs/requirements.md`, `docs/decisions.md`, `docs/session-log.md`, plus `README.md` and `.gitignore`. `scaffold/extras/` holds the extra docs, added only when a project needs them. |
+| `project-template/` | **v1:** the full template v1 projects were created from. No longer used by `new-project.ps1`; kept until the v1 projects move to v2. |
+| `new-project.ps1` | **v2:** copies `scaffold/` (not the extras) to a new folder, fills in the name, hosting (`-Hosting local\|github`, default local) and standard version, runs `git init` on `main`. `-IntoExisting` adopts the standard in a repo you already cloned, `-ReportOnly` adds only `portfolio.json`; both never overwrite, and `-DryRun` previews. |
+| `skills/new-project/` | Source of the `/new-project` Claude Code command (user level): new project, existing repo, or dashboard only. |
 | `skills/update-template/` | Source of the `/update-template` command (user level): brings an existing project up to the newest template version. |
+| `standard/` | **v2, in progress:** the rules, kept once here instead of copied into each project. See [`standard/README.md`](standard/README.md). |
+| `skills/<name>/`, `skills/preflight.md` | **v2, in progress:** the workflow commands (`/story`, `/report`, ...) installed once for the user. Each runs `preflight.md` first: checks the repo is on the standard and reads the rules at the project's version. v1 projects keep using their own copies in `.claude/skills/`. |
+| `install-skills.ps1` | Links every command in `skills/` into `%USERPROFILE%\.claude\skills\`. Never overwrites; `-DryRun` previews. |
+| `DECISIONS.md` | Design decisions about the template itself. |
 | `update-plan.ps1` | Read-only: finds a project's template version and lists what to add, replace or merge to reach the newest one. Used by `/update-template`. |
 | `tests/check-template.ps1` | Automated check of the template (see [Quality](#quality)). Run it before opening a PR. |
 | `check-compliance.ps1` | Rates a local repo against the standard: each check, the level, warnings. Read-only. |
@@ -175,6 +180,12 @@ answer the questions.
 ```powershell
 .\new-project.ps1 -Name "Guess Game"
 # creates guess-game in the current folder; add -Destination to put it elsewhere
+
+.\new-project.ps1 -Name "my-repo" -Destination D:\Projects -IntoExisting -Hosting github -DryRun
+# previews adopting the standard in an existing clone at D:\Projects\my-repo
+
+.\new-project.ps1 -Name "my-repo" -Destination D:\Projects -ReportOnly
+# adds only portfolio.json, so the repo shows on the dashboard
 ```
 
 If PowerShell blocks scripts:
@@ -202,6 +213,12 @@ command, so edits to its `SKILL.md` take effect immediately:
 New-Item -ItemType Junction -Path "$env:USERPROFILE\.claude\skills\new-project" -Target "<path-to-this-repo>\skills\new-project"
 New-Item -ItemType Junction -Path "$env:USERPROFILE\.claude\skills\update-template" -Target "<path-to-this-repo>\skills\update-template"
 ```
+
+**v2 commands** (in progress): `.\install-skills.ps1` links every command
+in `skills/` the same way, once per machine. It never overwrites a name
+that already exists; run `.\install-skills.ps1 -DryRun` first to see what
+it would do. In a v1 project, its own copy in `.claude\skills\` may be the
+one that runs, so install these once the projects you use are on v2.
 
 ### Changing the template
 
