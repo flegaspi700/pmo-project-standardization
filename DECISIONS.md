@@ -9,8 +9,8 @@ the old one `Superseded by <entry>`.
 
 ## 2026-11-13: Shared standards, small per-repo footprint (v2)
 
-**Status:** Accepted. Detailed design in
-[`ideas/lightweight-template.md`](ideas/lightweight-template.md), still a draft.
+**Status:** Accepted. Detailed design, including the answered questions,
+in [`ideas/lightweight-template.md`](ideas/lightweight-template.md).
 
 **Context:** The goal is to standardize every project (breaking down
 requirements, coding standards, security, reporting) and see them all on
