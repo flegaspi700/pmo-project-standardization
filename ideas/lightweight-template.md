@@ -1,8 +1,8 @@
 # Draft: lightweight template (v2)
 
-Status: **draft for review.** Implements the 2026-11-13 decision in
-[`DECISIONS.md`](../DECISIONS.md). Nothing here is built yet; open questions
-are at the bottom.
+Status: **agreed design, not built yet.** Implements the 2026-11-13
+decision in [`DECISIONS.md`](../DECISIONS.md). The user's answers to the
+open questions are at the bottom.
 
 ## The idea in one line
 
@@ -117,16 +117,27 @@ the standard.
 Then the dashboard can go ahead, and the other repos adopt v2 one short PR
 at a time.
 
-## Open questions
+## Answered questions (2026-11-13)
 
-- **How skills find the standard:** the local template folder (fast, works
-  offline, already how `/new-project` finds the template) or the pinned
-  GitHub link (works anywhere)? Proposal: local first, link as a fallback.
-- **Skills installed for the user:** they'd show up in every repo,
-  including ones not on the standard. Proposal: each skill checks for the
-  `Standard:` line first and offers to adopt the standard if it's missing.
-- **v1 projects:** migrate both to v2 (proposal), or leave them on v1 and
-  keep `/update-template` working for v1?
-- **Programs:** which groups do you want on the dashboard (for example
-  Learning, Games, Governance, PMO)? Free text or a fixed list?
-- **Learning and course repos:** Level 1 only, or the full five files too?
+- **How skills find the standard:** the local template folder first (found
+  through the skill's junction, as `/new-project` does today); the GitHub
+  link pinned to the project's version is the fallback when there's no
+  local copy.
+- **Skills in repos not on the standard:** every skill first looks for the
+  `Standard:` line in `AGENTS.md`. If it's missing, the skill stops and
+  offers to adopt the standard instead of running.
+- **v1 projects:** migrate `ocr-pipeline` and `portfolio-dashboard` to v2
+  (build step 6). v1 isn't kept alive: `/update-template` is only
+  rewritten if v2 still needs it.
+- **Programs:** free text in `portfolio.json` → `program` (the schema
+  already allows any string). Revisit a fixed list once the dashboard shows
+  which names get used.
+- **Learning and course repos:** start with `portfolio.json` only
+  (Level 1). They can take the five files later if they grow into real
+  projects.
+
+## Rollout after v2.0.0
+
+- **Level 1 only:** learning and course repos get `portfolio.json` with
+  `program` set. One new file per repo, nothing else touched.
+- **Level 2:** repos being actively built get the five files.
