@@ -1,6 +1,6 @@
 # Preflight for the standard's skills
 
-Every skill in this folder (except `/new-project` and `/update-template`)
+Every skill in this folder (except `/new-project`)
 does this first, before anything else. It's kept in one file so the skills
 can't drift apart.
 

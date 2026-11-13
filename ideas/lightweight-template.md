@@ -1,8 +1,9 @@
 # Draft: lightweight template (v2)
 
-Status: **agreed design, not built yet.** Implements the 2026-11-13
-decision in [`DECISIONS.md`](../DECISIONS.md). The user's answers to the
-open questions are at the bottom.
+Status: **built, released as v2.0.0** (2026-11-13). Implements the
+2026-11-13 decision in [`DECISIONS.md`](../DECISIONS.md). Kept as the design
+record; the current state is in `standard/`, `scaffold/` and `skills/`. The
+user's answers to the open questions are at the bottom.
 
 ## The idea in one line
 

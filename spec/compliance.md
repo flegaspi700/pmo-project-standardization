@@ -101,9 +101,8 @@ A new **required** check is due **30 days after the release** that adds it
 (`required_from` in the registry). Until then, a failure shows as a warning
 ("C4 required from 2026-11-24") and doesn't lower the level, so a release
 doesn't instantly downgrade the whole portfolio. The first checks count
-from v1.0.0 (2026-10-10), so they're due 2026-11-09. The v2 checks carry a
-provisional date (2026-12-13); it's set to the v2.0.0 release date + 30
-days when v2.0.0 is released.
+from v1.0.0 (2026-10-10), so they're due 2026-11-09. The v2 checks count
+from v2.0.0 (2026-11-13), so they're due 2026-12-13.
 
 ## Warnings worked out by the scanner
 

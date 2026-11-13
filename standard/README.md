@@ -4,10 +4,9 @@ How every project is planned, built, tested, secured and reported. It lives
 here, once. Projects don't copy it: each project's `AGENTS.md` names the
 version it follows and lists a few core rules, and links here for the rest.
 
-> **Work in progress (v2).** This folder is being built for v2.0.0 (see
-> [`DECISIONS.md`](../DECISIONS.md), 2026-11-13). Until v2.0.0 is released,
-> projects created from `project-template/` follow the rules in their own
-> docs.
+Introduced in v2.0.0 (see [`DECISIONS.md`](../DECISIONS.md), 2026-11-13).
+Projects created with v1 carry their own copy of the v1 rules until they
+move to v2.
 
 ## How a project uses it
 
