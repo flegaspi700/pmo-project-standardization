@@ -16,6 +16,11 @@ Read `AGENTS.md` in the project root and find the line:
 - **`AGENTS.md` has `Template version:` instead:** it's a v1 project. Its
   own skills in `.claude/skills/` are the ones to use. Say so, mention that
   it can be moved to v2, and stop.
+- **Neither, but the repo has `portfolio.json`:** it's a reporting-only
+  repo (compliance level 1). `/report` runs in its reporting-only mode;
+  every other skill stops, says the repo only reports its status, and
+  offers to adopt the rest with `/new-project` (the existing-repo option).
+  There are no project rules to read, so skip step 2.
 - **Neither:** stop. Say the repo isn't on the standard, and offer to adopt
   it with `/new-project` (the existing-repo option), or to add only a
   `portfolio.json` so it shows on the dashboard. Don't run the rest of the

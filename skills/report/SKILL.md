@@ -12,6 +12,14 @@ Then read `<template-dir>\skills\preflight.md` and follow it. Stop if it
 says to. Rules used here: `standard/sessions.md` → Reporting, and the
 reporting contract in `<template-dir>\spec\reporting-contract.md`.
 
+**Reporting-only repo** (preflight says so: `portfolio.json` but no
+Standard line): there are no project docs to count from. Do only step 5,
+then write those answers to `portfolio.json` as in step 7, leaving
+`phase`, `progress`, `next_milestone` and `budget` as they are. Set
+`updated` to today, and show the summary (step 8). Then, as for any change
+to the repo, ask before committing, and use a branch and a PR if
+`main` is protected.
+
 1. Read `portfolio.json`, `docs/requirements.md` (Phases table, stories,
    bugs), `docs/session-log.md` (entries since `progress.as_of` in
    `portfolio.json`), and `docs/budget.md` if there is one.
@@ -25,14 +33,15 @@ reporting contract in `<template-dir>\spec\reporting-contract.md`.
    finished (actual dates only; never change planned ones).
 5. **Ask the user** for the judgment calls; never guess them: health
    (green, amber, red) and why, risks, blockers, call-outs for the sponsor,
-   and whether `lifecycle` changed (`planning`, `active`, `on-hold`,
-   `done`, `archived`).
+   whether `lifecycle` changed (`planning`, `active`, `on-hold`, `done`,
+   `archived`), and whether the `program` is still right (free text: the
+   group the dashboard shows it under; show the current one).
 6. If a phase just closed, also ask the retrospective questions (what went
    well, what didn't, what to change next phase) and compare the time spent
    with the phase's estimate, if it had one. Add the answers to the top of
    `docs/session-log.md`, and offer to apply the changes.
 7. Update `portfolio.json` per the contract: `health`, `health_reason`,
-   `risks`, `blockers`, `callouts` and `lifecycle` from step 5; `phase`,
+   `risks`, `blockers`, `callouts`, `lifecycle` and `program` from step 5; `phase`,
    `next_milestone` and `progress` from the docs; `budget` from step 3, or
    `null` without `docs/budget.md`. Set `updated` to today. Keep it valid
    JSON, UTF-8, 2-space indent.

@@ -145,7 +145,10 @@ function Get-Compliance($repo, $today) {
         if ($r.Severity -eq 'warning') {
             $warnings += "$($r.Id) $($r.Title): $($r.Fix)"
         }
-        elseif ($r.Severity -eq 'required' -and -not $r.Due) {
+        # Grace-period warnings matter only to a repo that has adopted the
+        # standard: for a Reporting repo, the checks it fails are simply
+        # the step to Adopted, not a change coming due
+        elseif ($r.Severity -eq 'required' -and -not $r.Due -and $level -ge 2) {
             $warnings += "$($r.Id) required from $($r.RequiredFrom): $($r.Fix)"
         }
     }

@@ -5,6 +5,30 @@ v2, a project pins the version it follows in `AGENTS.md`
 (`**Standard:** pmo-project-standardization vX.Y.Z`); each entry says what a
 project must do to move to that version, if anything.
 
+## v2.1.0 (2026-11-13)
+
+Fixes from rolling v2 out to six repos. **Projects need to do nothing** to
+move from v2.0.0; the standard's rules only gained two sentences in
+`sessions.md`.
+
+- **`/report` asks whether the program is still right**, so a project's
+  dashboard group can change any time. Reporting contract: `program` is
+  written by `/new-project`, then `/report`.
+- **`/report` works in reporting-only repos** (just `portfolio.json`): the
+  preflight lets it through, and it asks only the judgment calls and the
+  program. Every other skill still stops there and offers to adopt.
+- **Compliance:** W1 (`CLAUDE.md` loads `AGENTS.md`) applies only to repos
+  with a Standard line, so a reporting-only repo with a `CLAUDE.md` no
+  longer warns. Grace-period warnings (and the scanner's S3) are listed
+  only for repos at Adopted or higher: for a Reporting repo, the checks it
+  fails are the step to Adopted, not a change coming due.
+- **`/new-project`** on an existing repo formats the added files with the
+  repo's own formatter when its CI checks Markdown or JSON, and follows the
+  repo's own prose rules (for example "no em dashes").
+- `tests/check-template.ps1`: tests the W1 scope and the grace-period
+  rule (a reporting-only repo lists none; an adopted repo failing C10
+  still does).
+
 ## v2.0.0 (2026-11-13)
 
 **Shared standard, small footprint.** The rules now live once in this repo
