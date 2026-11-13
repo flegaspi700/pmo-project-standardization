@@ -4,6 +4,10 @@ Notable changes to the project template. Versions are git tags (`v1.0.0`, ...).
 Projects keep the copy they were created from, so this list shows what newer
 projects get that older ones don't.
 
+## Unreleased (v2 in progress)
+
+- **`standard/`** (v2 build step 2): the rules, kept once in this repo instead of copied into every project. One file per topic: requirements, decisions, coding, testing, git, security, sessions and reporting, plus accessibility and cost for projects they apply to. Taken from the v1 `AGENTS.md` and docs 01, 02, 05-07, 10, 12-16, with the duplication between `AGENTS.md` and the docs removed. Not used by projects yet: `project-template/` is unchanged until v2.0.0.
+
 ## v1.5.1 (2026-10-25)
 
 - `/update-template` handles barely-filled-in projects (found in the second pilot): placeholders are never copied or counted; `summary` falls back to `AGENTS.md` or the README when the vision is unfilled; `progress` is `null` without real stories; `budget` is `null` while doc `16`'s limits are placeholders; placeholder-only template changes are recognised as nothing to merge; the test step says when there's no test command; warnings about the project's own unfinished docs are reported, not fixed.
