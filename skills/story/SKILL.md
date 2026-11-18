@@ -83,7 +83,8 @@ test backfilled. Don't backfill any of these.
    to differ from an approved design, update the design in the same commit
    and add a dated line under its Changes; if the difference is a
    significant choice, stop and ask first.
-8. Mark the story `Done` only when every item is met. In a feature, epic or
+8. Mark the story `Done` only when every item is met, and tick each of its
+   criteria (`- [x]`). In a feature, epic or
    phase run, commit it on the branch (Conventional Commits with the story
    ID) and go on, with no approval between stories. If the Definition of
    Done can't be met or the suite fails, **stop the run** and report.

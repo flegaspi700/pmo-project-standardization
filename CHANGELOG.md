@@ -5,6 +5,19 @@ v2, a project pins the version it follows in `AGENTS.md`
 (`**Standard:** pmo-project-standardization vX.Y.Z`); each entry says what a
 project must do to move to that version, if anything.
 
+## v2.3.1 (2026-11-18)
+
+Found while testing v2.3.0 in a sandbox project. **Projects need to do
+nothing** to move from v2.3.0 (change the Standard line and link when
+convenient).
+
+- **Acceptance criteria get ticked** (`- [x]`) when they're met: when
+  their test passes, or for `[manual]`, when the check is recorded.
+  Before, a `Done` story still showed every box empty, because nothing
+  said to tick them. Added to `requirements.md` (and its Definition of
+  Done item on the story's status) and to `/story` step 8. Ticking the
+  boxes of stories already `Done` is optional.
+
 ## v2.3.0 (2026-11-18)
 
 Spec-driven and test-driven development ([decision](DECISIONS.md)).
