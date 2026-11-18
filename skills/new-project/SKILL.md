@@ -87,7 +87,8 @@ locally (then set `**Hosting: local**` in `AGENTS.md`).
    clone doesn't change the repo.
 2. Make sure `main` is clean and current, then branch:
    `chore/adopt-standard` (choice 3) or `chore/add-portfolio-json`
-   (choice 4). Nothing lands on `main` without a PR the user merges.
+   (choice 4). Nothing lands on `main` without a PR, merged only when the
+   user says so.
 3. Preview: run the script with `-DryRun`, adding `-ReportOnly` for
    choice 4:
    `& "<template-dir>\new-project.ps1" -Name "<repo-name>" -Destination "<destination>" -IntoExisting -Hosting github -DryRun`
@@ -159,7 +160,7 @@ Show what changed (`git status`), then ask before each step:
 - **New GitHub repo:** commit, then `git push -u origin main`.
 - **Existing repo:** commit on the branch (`chore: adopt the standard` or
   `chore: add portfolio.json`), push the branch, and open a PR. Never push
-  `main`, never merge.
+  `main`; merge only when the user says so (`git.md`).
 
 ## 5. Next steps
 

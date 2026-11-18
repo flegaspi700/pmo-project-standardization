@@ -26,6 +26,5 @@ says to. Rules used here: `requirements.md` → Bugs, `testing.md` → Bugs,
 7. If the bug came from a manual test, update its result in
    `docs/manual-tests.md`.
 8. **Ask before committing** (`fix: <summary> (<ID>)`). Then, as in
-   `/story`: on `github`, ask before pushing and opening the PR, and never
-   merge; on `local`, stop on the branch and merge only when the user says
-   so.
+   `/story`: on `github`, ask before pushing and opening the PR; on `local`,
+   stop on the branch. Merge only when the user says so (`git.md`).

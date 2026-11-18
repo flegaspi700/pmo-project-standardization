@@ -26,9 +26,16 @@ rule and skill reads it.
    PR description from `.github/pull_request_template.md` if the project
    has one, including real test output. Locally, show the branch
    (`git log main..HEAD`, `git diff main`).
-6. **The user merges.** On GitHub, the agent never merges a PR; use squash
-   merge. Locally, once the user says so: `git switch main`, then
-   `git merge --squash <branch>`, and commit with the story's title.
+6. **Merge on the user's say-so.** The user merges, or says so and the
+   agent merges: "merge it" for one PR, or a yes, at the start of a run,
+   to merging each PR as it goes (that yes covers that run only). Never
+   merge without one of these. Always squash merge.
+   - **GitHub:** first make sure CI is green (`gh pr checks <number>
+     --watch`) or, if the repo has no CI, that the full suite passed on
+     the branch. Then `gh pr merge <number> --squash`, with the squash
+     commit in the Commits format below. Red CI: stop and report.
+   - **Local:** `git switch main`, then `git merge --squash <branch>`, and
+     commit with the story's title.
 7. **Clean up only after the merge is confirmed.** On GitHub, check
    `gh pr view <number> --json state` shows `MERGED`, then switch to
    `main`, pull, and delete the branch locally and on the remote. If it
@@ -41,7 +48,9 @@ story, finish the first and start a new branch.
 
 **A whole feature at once** (`/story F1.2`): one branch and PR for the
 feature, `feature/F1.2-short-description`, with one commit per story. For
-an epic, one branch per feature.
+an epic or a whole phase (`/story phase`), one branch and PR per feature,
+in order. The next feature branches from `main` only after the previous
+one is confirmed merged (step 7), so it builds on it.
 
 ## Naming
 
