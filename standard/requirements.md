@@ -76,6 +76,10 @@ gets ([testing.md](testing.md)):
 | `[e2e]` | An end-to-end test, run the way a user would |
 | `[manual]` | A person, in `docs/manual-tests.md`; the criterion says exactly what to look at |
 
+**Tick a criterion when it's met:** `- [x]` once its test passes (or, for
+`[manual]`, once the check is recorded). A `Done` story has every box
+ticked, so the file shows at a glance what's built.
+
 A feature has two lines under its title:
 
 ```
@@ -179,7 +183,8 @@ checks adds them under project-specific notes in its `AGENTS.md`.
 - [ ] Security checks for the change pass ([security.md](security.md));
       accessibility checks too if the UI changed
       ([accessibility.md](accessibility.md)).
-- [ ] The story's status is updated in `docs/requirements.md`.
+- [ ] The story's criteria are ticked and its status is updated in
+      `docs/requirements.md`.
 
 A **feature** is done when all its stories are done, its acceptance test
 passes (or, if `[manual]`, has been checked and recorded), its integration
