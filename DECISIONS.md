@@ -7,6 +7,67 @@ the old one `Superseded by <entry>`.
 
 ---
 
+## 2026-11-18: Spec-driven and test-driven development (v2.3)
+
+**Status:** Accepted.
+
+**Context:** The standard already had test-driven development (tests
+first, seen failing, never weakened) and half of spec-driven development:
+a reviewed `docs/requirements.md` with Given/When/Then criteria, written by
+`/breakdown` before any code. Three gaps remained:
+- There was no technical design step, so design choices surfaced mid-story
+  and stopped phase runs.
+- A feature's **Done when** was checked by hand at the end, not by a test
+  written first.
+- Tests weren't traceable to the criteria they cover.
+
+game-studio's `specs/` folder (requirements, design and tasks per spec,
+criteria tagged by how they're checked, tests naming `AC-n.m`) showed what
+a fuller version looks like. v1 was retired for being too heavy, so
+anything added has to stay small.
+
+**Options considered:**
+
+| Question | Options | Chosen |
+|---|---|---|
+| When a feature gets a design | Only when needed (new component, changed interface or data, more than 3 stories) / every feature / suggested only | **Only when needed**, required then |
+| Where it lives | `docs/design/F1.2.md` / a section in `requirements.md` | **`docs/design/F1.2.md`** |
+| How far TDD goes | Feature acceptance test + tagged criteria + tests named by criterion / tags and names only / acceptance test only | **All three** |
+| `specs/` folder layout (game-studio) | Now / a separate change later | **Later** |
+
+**Decision:**
+- **Designs:** a feature that needs a design gets a one-page
+  `docs/design/<ID>.md`, written by the new `/design` skill and approved
+  by the user before any of its stories is built. Changes after approval
+  are made with the code and logged in the design's Changes list.
+- **Criteria:** they are numbered and tagged (`[unit]`, `[integration]`,
+  `[e2e]`, `[manual]`).
+- **Tests:** each test names the criterion it covers. A feature's **Done
+  when** becomes an acceptance test, written first and marked as expected
+  to fail until the feature's last story.
+
+**Why:**
+- The design is reviewed when it's cheap to change, and phase runs stop
+  less often mid-way.
+- The acceptance test makes "feature done" a test result, not a
+  judgement.
+- Tags and names let anyone trace a criterion to its test.
+- Small features keep the old path, so the extra weight lands only where
+  the work is big enough to need it.
+
+**Trade-offs accepted:**
+- **More process before big features:** one more document and one more
+  approval.
+- **Designs can drift from the code.** This is guarded by the Definition
+  of Done and the Changes list.
+- **A deliberate exception to "never skip a test":** the acceptance test
+  is marked as expected to fail while its stories are built.
+
+**Revisit if:** designs are routinely skipped by overriding the **Design:**
+line, or they routinely go stale.
+
+---
+
 ## 2026-11-18: Phase runs, and the agent merges on the user's say-so (v2.2)
 
 **Status:** Accepted.

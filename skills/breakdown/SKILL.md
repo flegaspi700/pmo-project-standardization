@@ -24,13 +24,19 @@ says to. Rules used here: `standard/requirements.md`.
    project), then epics and features:
    - every epic serves the vision; flag an idea that doesn't instead of
      adding it
-   - every feature has a phase and a **Done when** line
+   - every feature has a phase, a **Done when** line that can become its
+     acceptance test, and a **Design:** line: `not needed`, or
+     `docs/design/<ID>.md (Draft)` when it needs one by the rules in
+     `requirements.md` (Designing a feature)
 4. Write **stories with acceptance criteria only for the current and next
    phase**: one prompt-sized change each, Given/When/Then criteria
-   including empty and worst-case inputs. Later phases get epics and
-   features only.
+   including empty and worst-case inputs, numbered (`AC1`, `AC2`, ...) and
+   tagged with how each is checked (`[unit]`, `[integration]`, `[e2e]`,
+   `[manual]`). Later phases get epics and features only.
 5. Show the breakdown and wait for the user's changes. Then write it into
    `docs/requirements.md`: the Phases table, and the epics, features and
    stories in the format in `requirements.md`.
+6. List the current phase's features that need a design, and suggest
+   `/design <ID>` for each before `/story`.
 
 Don't write any code.

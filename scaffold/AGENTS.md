@@ -35,9 +35,11 @@ The rules that always apply, even without opening the standard:
   end with an entry there (`/wrap-up`).
 - **Stories:** work from a story in `docs/requirements.md`, one at a time.
   One branch per story; never commit to `main`. Ask before committing or
-  pushing. Merge only when the user says so.
+  pushing. Merge only when the user says so. A feature that needs a design
+  is built only after its design is approved.
 - **Tests first:** see each new test fail, then pass. Show real output.
-  Never delete, skip or weaken a test to get to green.
+  Each test names the criterion it covers. Never delete, skip or weaken a
+  test to get to green.
 - **Simple:** the simplest code that works. For a significant choice, give
   2-3 options including the simplest; the user decides; log it in
   `docs/decisions.md`.

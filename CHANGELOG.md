@@ -5,6 +5,45 @@ v2, a project pins the version it follows in `AGENTS.md`
 (`**Standard:** pmo-project-standardization vX.Y.Z`); each entry says what a
 project must do to move to that version, if anything.
 
+## v2.3.0 (2026-11-18)
+
+Spec-driven and test-driven development ([decision](DECISIONS.md)).
+**To move from v2.2.x:**
+- In `AGENTS.md`, change the Standard line and the link to the standard
+  to v2.3.0.
+- Add two sentences to the core rules. Stories: "A feature that needs a
+  design is built only after its design is approved." Tests first: "Each
+  test names the criterion it covers."
+- Nothing is backfilled: the new formats apply to stories and features
+  written after the move.
+
+**On each machine:** run `install-skills.ps1` once to link the new
+`/design` skill.
+
+- **Feature designs:**
+  - A feature that adds a component, changes an interface or data format,
+    or has more than 3 stories needs a one-page design in
+    `docs/design/<ID>.md`, approved by the user before its stories are
+    built.
+  - Features get a **Design:** line.
+  - New skill **`/design F1.2`** drafts the design, raises significant
+    choices as options, and records the approval.
+- **Criteria:** numbered (`AC1`, ...) and tagged with how they're checked
+  (`[unit]`, `[integration]`, `[e2e]`, `[manual]`).
+- **Tests:** each test names the criterion it covers (`S1.2.3 AC2`).
+- **Outside-in:** a feature's **Done when** becomes an acceptance test,
+  written first, marked as expected to fail, and passing when the last
+  story is done.
+- **`/breakdown`** writes tagged criteria and Design lines, and lists the
+  features that need `/design`.
+- **`/story`:**
+  - won't build a feature whose design isn't approved;
+  - writes the acceptance test first;
+  - writes each test as the tagged kind, named by its criterion;
+  - keeps the design in step with the code.
+- **Updated to match:** `testing.md` checklists and the Definition of Done,
+  the scaffold `AGENTS.md` core rules, and both READMEs.
+
 ## v2.2.0 (2026-11-18)
 
 Whole-phase runs, and the agent merges on the user's say-so

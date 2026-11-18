@@ -28,7 +28,9 @@ Rules:
 - **Reference IDs everywhere:** branch names, commits, prompts, file header
   notes.
 - **Existing code isn't backfilled.** When a project adopts the standard,
-  write stories for new work only.
+  write stories for new work only. The same goes for a newer version of
+  the standard: its formats (criteria tags, designs) apply to stories and
+  features written after the move.
 
 **Statuses:** `Backlog` → `Ready` (acceptance criteria written) →
 `In progress` → `Done`, or `Dropped`.
@@ -55,15 +57,83 @@ starts or finishes.
 **Status:** Backlog
 
 **Acceptance criteria:**
-- [ ] Given <starting state>, when <action>, then <observable result>
-- [ ] <edge case: empty, missing or invalid input>
-- [ ] <edge case: largest or worst realistic input>
+- [ ] AC1 [unit] Given <starting state>, when <action>, then <observable result>
+- [ ] AC2 [unit] <edge case: empty, missing or invalid input>
+- [ ] AC3 [integration] <edge case: largest or worst realistic input>
 
 **Notes:** <links, constraints, related decisions>
 ```
 
-A feature has a **Done when** line: how you'll see its stories working
-together ("can demo X end to end on real input").
+**Criteria are numbered and tagged.** Number them `AC1`, `AC2`, ... in
+order; like other IDs, they're never renumbered. Elsewhere, refer to one as
+`S1.2.3 AC2`. The tag says how it's checked, and so which kind of test it
+gets ([testing.md](testing.md)):
+
+| Tag | Checked by |
+|---|---|
+| `[unit]` | A unit test |
+| `[integration]` | A test of components working together through their real interfaces |
+| `[e2e]` | An end-to-end test, run the way a user would |
+| `[manual]` | A person, in `docs/manual-tests.md`; the criterion says exactly what to look at |
+
+A feature has two lines under its title:
+
+```
+### F1.2 — <title>
+
+**Done when:** <how you'll see its stories working together, e.g. "can
+demo X end to end on real input">
+**Design:** not needed | docs/design/F1.2.md (Draft | Approved YYYY-MM-DD)
+```
+
+**Done when** is the feature's **acceptance test**: written first and seen
+failing when the feature starts, passing once its last story is done
+([testing.md](testing.md) → Outside-in). If it can't be automated, tag it
+`[manual]` and record it in `docs/manual-tests.md`.
+
+## Designing a feature
+
+Most features go straight from their stories to tests. A feature **needs a
+design** when any of these is true:
+
+- it adds a component, module or service
+- it changes a public interface, a data format or what's stored
+- it has more than 3 stories
+
+`/breakdown` sets each feature's **Design:** line by these rules, and the
+user can override it. **No story of a feature that needs a design is built
+until the design is `Approved`.** `/design F1.2` writes it.
+
+A design is one short file, `docs/design/F1.2.md`, about a page:
+
+```
+# F1.2 — <title>: design
+
+**Status:** Draft | Approved YYYY-MM-DD
+
+**Approach:** How the feature works, in a paragraph.
+**Components touched:** New and changed modules, files or services.
+**Interfaces and data:** Function signatures, formats, stored data, as
+exact as they're known.
+**Risks:** What could go wrong, and how the design guards against it.
+**Test approach:** The feature's acceptance test, and which criteria are
+`[integration]` or `[e2e]`.
+**Decisions:** Links to the entries in `docs/decisions.md`. Significant
+choices are still logged there ([decisions.md](decisions.md)).
+
+## Changes
+- YYYY-MM-DD: <what changed after approval, and why>
+```
+
+Rules:
+
+- **Approval is the user's.** The agent drafts, the user approves, and the
+  status gets the date.
+- **Changing an approved design:** change the file in the same commit as
+  the code that needs it, and add a dated line under Changes. Never let
+  the code drift from the design silently.
+- If the project has `docs/architecture.md`, the lasting parts of a design
+  (components, interfaces) go there once the feature is done.
 
 ## Working through stories
 
@@ -77,7 +147,9 @@ together ("can demo X end to end on real input").
 - **A whole phase on request** (`/story phase`): every `Ready` story in the
   current phase, feature by feature, with one approval up front: the user
   reviews the list of stories and says whether each feature's PR may be
-  merged as it goes. Same stop conditions, plus red CI. At the end, check
+  merged as it goes. Every feature that needs a design must have it
+  `Approved` before the run starts. Same stop conditions, plus red CI. At
+  the end, check
   the phase's exit criteria; with the user's OK, set the phase to `Done` in
   the Phases table and offer `/breakdown` for the next phase. Later phases
   aren't built in the same run: their stories aren't written yet.
@@ -91,25 +163,28 @@ A story is `Done` only when it meets its own acceptance criteria and every
 item below. The list is the same for every story. A project that needs more
 checks adds them under project-specific notes in its `AGENTS.md`.
 
-- [ ] Each acceptance criterion has a test, written first and seen failing.
-      The tests now pass, and the output has been seen, not just reported.
+- [ ] Each acceptance criterion has a test of its tagged kind, written
+      first and seen failing, that names the criterion (`S1.2.3 AC2`).
+      `[manual]` criteria are recorded in `docs/manual-tests.md`. The tests
+      now pass, and the output has been seen, not just reported.
 - [ ] No test was deleted, skipped or weakened to get there.
 - [ ] The full test suite passes.
 - [ ] The code is the simplest version that works ([coding.md](coding.md)).
 - [ ] New and changed files have header notes; non-obvious functions have
       doc comments; existing notes still match the code.
 - [ ] Any significant choice is logged in `docs/decisions.md`
-      ([decisions.md](decisions.md)); diagrams, if the project has them,
-      still match the code.
+      ([decisions.md](decisions.md)); the feature's design, if it has one,
+      and diagrams, if the project has them, still match the code.
 - [ ] No non-functional requirement is broken.
 - [ ] Security checks for the change pass ([security.md](security.md));
       accessibility checks too if the UI changed
       ([accessibility.md](accessibility.md)).
 - [ ] The story's status is updated in `docs/requirements.md`.
 
-A **feature** is done when all its stories are done, its integration and
-manual tests pass ([testing.md](testing.md)), and its **Done when** line has
-been demonstrated. An **epic** is done when all its features are.
+A **feature** is done when all its stories are done, its acceptance test
+passes (or, if `[manual]`, has been checked and recorded), its integration
+and manual tests pass ([testing.md](testing.md)), and its **Done when** line
+has been demonstrated. An **epic** is done when all its features are.
 
 ## Non-functional requirements
 
