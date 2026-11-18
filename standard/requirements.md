@@ -72,7 +72,15 @@ together ("can demo X end to end on real input").
 - **A whole feature or epic on request** (`/story F1.2`): build its stories
   one after the other, each still test-first and through the Definition of
   Done, with one approval per feature. Stop if a story fails its Definition
-  of Done, a test fails, or a design choice comes up.
+  of Done, a test fails, or a design choice comes up. Merging follows
+  [git.md](git.md): only on the user's say-so.
+- **A whole phase on request** (`/story phase`): every `Ready` story in the
+  current phase, feature by feature, with one approval up front: the user
+  reviews the list of stories and says whether each feature's PR may be
+  merged as it goes. Same stop conditions, plus red CI. At the end, check
+  the phase's exit criteria; with the user's OK, set the phase to `Done` in
+  the Phases table and offer `/breakdown` for the next phase. Later phases
+  aren't built in the same run: their stories aren't written yet.
 - **Never change acceptance criteria to fit the code.** If a criterion
   looks wrong, flag it and let the user decide.
 - When a story is done, update its status in `docs/requirements.md`.

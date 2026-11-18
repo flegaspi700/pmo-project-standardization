@@ -7,6 +7,47 @@ the old one `Superseded by <entry>`.
 
 ---
 
+## 2026-11-18: Phase runs, and the agent merges on the user's say-so (v2.2)
+
+**Status:** Accepted.
+
+**Context:** `/story` builds one story, one feature or one epic, and the
+agent may never merge a PR. The user wants to complete a whole project in
+one run, and to let the agent merge. A run of several features needs the
+merges: each feature has its own branch from `main`, so the next feature
+can't build on the previous one until it's merged. The standard writes
+stories only for the current and next phase, so later phases can't be
+built before `/breakdown` writes them.
+
+**Options considered:**
+
+| Question | Options | Chosen |
+|---|---|---|
+| Scope of a long run | Current phase / phase, then `/breakdown` and keep going / every `Ready` story regardless of phase | **Current phase** (`/story phase`) |
+| When the agent may merge | Only on the user's say-so / per-project opt-in (`**Merge: user\|agent**`) / always when CI is green | **On the user's say-so** |
+| Approvals in a run | Once up front / per feature | **Once up front** |
+
+**Decision:** `/story phase` builds every `Ready` story in the current
+phase with one approval up front, which also asks whether to merge each
+feature's PR as it goes. A yes is the user's say-so for that run's PRs
+only. Outside a run, the agent merges when the user says "merge it". On
+GitHub, CI must be green first (or, without CI, the full suite must have
+passed on the branch).
+
+**Why:** The phase is the largest unit whose stories are written and
+reviewed, so a run never builds work nobody has looked at. Say-so keeps
+the user in control of `main` without a new setting, and matches how the
+user already works.
+
+**Trade-offs accepted:**
+- Longer unattended runs. They're guarded by the existing stop conditions
+  (a design choice, a failed Definition of Done, a failing suite) plus red
+  CI, and by the up-front review of the story list.
+- A project on an older version keeps its pinned `git.md`, so the agent
+  still never merges there until the project moves to v2.2.0.
+
+---
+
 ## 2026-11-13: Shared standards, small per-repo footprint (v2)
 
 **Status:** Accepted. Detailed design, including the answered questions,

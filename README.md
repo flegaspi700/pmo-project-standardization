@@ -42,7 +42,7 @@ dashboard ([roadmap](#roadmap)).
 | `decisions.md` | When a choice needs options compared, and how it's logged |
 | `coding.md` | Simplicity, files, comments, errors, logging, encoding |
 | `testing.md` | Test-first, no weakening tests, regression tests for bugs, checklists |
-| `git.md` | One branch per story, Conventional Commits, the user merges; local or GitHub |
+| `git.md` | One branch per story, Conventional Commits, merge on the user's say-so; local or GitHub |
 | `security.md` | Secrets, dependencies, input, privacy, AI-agent risks, threat model |
 | `sessions.md` | Working with an agent, handoffs between sessions, reporting |
 | `accessibility.md`, `cost.md` | For projects with a UI, or that cost money |
@@ -73,7 +73,7 @@ in every project:
 | `/breakdown` | Turn the vision into phases, epics, features and stories |
 | `/stack` | Recommend a tech stack with 2–3 options; the user decides |
 | `/decide` | Compare options for a design choice and log the decision |
-| `/story` | Build a story (or a whole feature) test-first on its own branch, then check the Definition of Done |
+| `/story` | Build a story (or a whole feature, epic or phase) test-first on its own branch, then check the Definition of Done |
 | `/fix-bug` | Log a bug, reproduce it with a failing test, then fix it |
 | `/report` | Update `portfolio.json`: counts from the docs, health and risks from the user |
 | `/security-check`, `/a11y-check` | Run the security and accessibility checklists |

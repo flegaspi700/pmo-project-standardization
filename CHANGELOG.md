@@ -5,6 +5,26 @@ v2, a project pins the version it follows in `AGENTS.md`
 (`**Standard:** pmo-project-standardization vX.Y.Z`); each entry says what a
 project must do to move to that version, if anything.
 
+## v2.2.0 (2026-11-18)
+
+Whole-phase runs, and the agent merges on the user's say-so
+([decision](DECISIONS.md)). **To move from v2.1.x:** change the Standard
+line in `AGENTS.md` to v2.2.0, and in its Stories core rule replace "The
+user merges." with "Merge only when the user says so." Nothing else.
+
+- **`/story phase`** builds every `Ready` story in the current phase,
+  feature by feature, with one approval up front. It still stops on a
+  design choice, a failed Definition of Done, a failing suite or red CI.
+  At the end it checks the phase's exit criteria and offers `/breakdown`
+  for the next phase.
+- **The agent may merge on the user's say-so** (`git.md` step 6): "merge
+  it" for one PR, or a yes at the start of a phase run to merging each
+  feature's PR as it goes. On GitHub, CI must be green first. Before, the
+  agent never merged. The next feature in a run branches from `main` only
+  after the previous one is confirmed merged.
+- `requirements.md`, `/fix-bug`, `/new-project`, the scaffold `AGENTS.md`
+  and the README use the same merge wording.
+
 ## v2.1.0 (2026-11-13)
 
 Fixes from rolling v2 out to six repos. **Projects need to do nothing** to
