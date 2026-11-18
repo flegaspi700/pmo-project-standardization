@@ -35,10 +35,10 @@ Point out the conflict when you notice one.
 
 | File | Covers |
 |---|---|
-| [requirements.md](requirements.md) | Breaking work down: epics, features, stories, phases, the Definition of Done, NFRs, bugs |
+| [requirements.md](requirements.md) | Breaking work down: epics, features, stories with tagged criteria, feature designs, phases, the Definition of Done, NFRs, bugs |
 | [decisions.md](decisions.md) | When a choice needs options compared, and how it's logged |
 | [coding.md](coding.md) | Simplicity, file layout, notes and comments, errors, logging, text encoding |
-| [testing.md](testing.md) | Test-first, reliable tests, bugs, coverage, checklists |
+| [testing.md](testing.md) | Test-first, outside-in acceptance tests, tests named by criterion, reliable tests, bugs, coverage, checklists |
 | [git.md](git.md) | Branches, commits, PRs, hosting `local` or `github` |
 | [security.md](security.md) | Secrets, dependencies, input, privacy, AI-agent risks |
 | [sessions.md](sessions.md) | Working with an agent, start and end of a session, reporting to the portfolio |
@@ -77,6 +77,7 @@ starting files are in [`scaffold/extras/`](../scaffold/extras/):
 | `docs/architecture.md` | It has more than one component, or a design worth drawing | [decisions.md](decisions.md) |
 | `docs/budget.md` | It costs money | [cost.md](cost.md) |
 | `docs/manual-tests.md` | Some things can only be checked by a person | [testing.md](testing.md) |
+| `docs/design/<feature>.md` | A feature needs a design (`/design` writes it; no starter file) | [requirements.md](requirements.md) |
 
 ## Changing the standard
 

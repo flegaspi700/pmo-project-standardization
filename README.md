@@ -38,10 +38,10 @@ dashboard ([roadmap](#roadmap)).
 
 | File | Covers |
 |---|---|
-| `requirements.md` | Epics, features, stories, phases, the Definition of Done, NFRs, bugs |
+| `requirements.md` | Epics, features, stories with tagged criteria, feature designs, phases, the Definition of Done, NFRs, bugs |
 | `decisions.md` | When a choice needs options compared, and how it's logged |
 | `coding.md` | Simplicity, files, comments, errors, logging, encoding |
-| `testing.md` | Test-first, no weakening tests, regression tests for bugs, checklists |
+| `testing.md` | Test-first, acceptance tests per feature, tests named by criterion, no weakening tests, regression tests for bugs, checklists |
 | `git.md` | One branch per story, Conventional Commits, merge on the user's say-so; local or GitHub |
 | `security.md` | Secrets, dependencies, input, privacy, AI-agent risks, threat model |
 | `sessions.md` | Working with an agent, handoffs between sessions, reporting |
@@ -72,6 +72,7 @@ in every project:
 | `/brainstorm` | Explore an idea and compare directions before anything is built |
 | `/breakdown` | Turn the vision into phases, epics, features and stories |
 | `/stack` | Recommend a tech stack with 2–3 options; the user decides |
+| `/design` | Write a feature's design and get it approved before its stories are built (only for features that need one) |
 | `/decide` | Compare options for a design choice and log the decision |
 | `/story` | Build a story (or a whole feature, epic or phase) test-first on its own branch, then check the Definition of Done |
 | `/fix-bug` | Log a bug, reproduce it with a failing test, then fix it |
@@ -93,7 +94,7 @@ flowchart LR
     C --> E[new-project.ps1<br/>copies the five files]
     D --> E
     E --> F[Vision drafted,<br/>user confirms]
-    F --> H["/breakdown → /story → /report"]
+    F --> H["/breakdown → /design → /story → /report"]
     R --> P[(Portfolio)]
     H --> P
 ```

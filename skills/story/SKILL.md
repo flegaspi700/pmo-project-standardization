@@ -33,7 +33,8 @@ For a feature, epic or phase, before writing any code:
    order. Fix anything wrong now, when it's cheap.
 2. List the stories to build (ID, title, status, dependencies), grouped by
    feature, and wait for a yes. Skip stories already `Done`; stop and
-   report any that aren't ready.
+   report any that aren't ready, and any feature that needs a design that
+   isn't `Approved` (offer `/design <ID>`).
 3. **Phase only:** ask whether to merge each feature's PR as it goes, once
    CI is green and the Definition of Done is met. A yes is the user's
    say-so for this run's PRs only (`git.md`); a no means the run stops
@@ -45,15 +46,31 @@ For one story, do all the steps. For a feature, epic or phase: steps 1-2
 once, step 3 once per feature, steps 4-8 for each story in turn, step 9 at
 the end of each feature, step 10 at the end of a phase.
 
+Older stories and features (written before the project's standard had
+them) may have untagged criteria or no **Design:** line. Pick the kind of
+test that fits an untagged criterion, and treat a missing **Design:** line
+as `not needed`. A feature already under way doesn't get an acceptance
+test backfilled. Don't backfill any of these.
+
 1. Read `AGENTS.md` (commands, project-specific notes), the story and its
-   feature and epic in `docs/requirements.md`, the latest entry in
+   feature and epic in `docs/requirements.md`, the feature's design
+   (`docs/design/<feature ID>.md`) if it has one, the latest entry in
    `docs/session-log.md`, and `docs/architecture.md` if there is one.
 2. Check the story is ready: acceptance criteria written, dependencies
-   done. If not, say what's missing and stop.
+   done, and, if the feature's **Design:** line names a file, that design
+   `Approved`. If not, say what's missing (offer `/design` for a design)
+   and stop.
 3. Branch from an up-to-date `main`, named per `git.md`:
    `feature/<ID>-short-description`. Set the story to `In progress`.
-4. **Tests first:** one per acceptance criterion, plus empty and worst-case
-   inputs. Run them and **show them failing.**
+   **At the start of a feature** (its first story, or a feature, epic or
+   phase run): turn its **Done when** into the acceptance test
+   (`testing.md` → Outside-in), run it and **show it failing**, mark it as
+   expected to fail, and commit it first. Skip this if **Done when** is
+   `[manual]`.
+4. **Tests first:** one per acceptance criterion, of the kind its tag says
+   (`[unit]`, `[integration]`, `[e2e]`; `[manual]` goes in
+   `docs/manual-tests.md`), each naming its criterion (`S1.2.3 AC2`), plus
+   empty and worst-case inputs. Run them and **show them failing.**
 5. Write the simplest code that makes them pass, following `coding.md`
    (header notes, doc comments, errors, logging). Run the full suite and
    **show the output.**
@@ -62,12 +79,19 @@ the end of each feature, step 10 at the end of a phase.
    this always stops the run.
 7. Go through the **Definition of Done** (`requirements.md`, plus any extra
    checks in `AGENTS.md`) item by item: met or not met. Fix what's not met;
-   list anything you can't verify yourself for the user.
+   list anything you can't verify yourself for the user. If the code had
+   to differ from an approved design, update the design in the same commit
+   and add a dated line under its Changes; if the difference is a
+   significant choice, stop and ask first.
 8. Mark the story `Done` only when every item is met. In a feature, epic or
    phase run, commit it on the branch (Conventional Commits with the story
    ID) and go on, with no approval between stories. If the Definition of
    Done can't be met or the suite fails, **stop the run** and report.
-9. **Ask before committing** (single story) or before the final step
+9. **When a feature's last story is done,** take the expected-to-fail mark
+   off its acceptance test, run the full suite and **show it passing.** If
+   it doesn't pass, the feature isn't done: stop the run and report.
+
+   **Ask before committing** (single story) or before the final step
    (feature or epic: show the stories done, test output, Definition of Done
    results, anything left to check by hand; a phase run already has its
    approval from the start). Then by hosting (`git.md`):
@@ -89,5 +113,6 @@ the end of each feature, step 10 at the end of a phase.
     phase to `Done` with today's date, then offer `/breakdown` for the next
     phase.
 
-Never delete, skip or weaken a test to get to green. If a test or a
-criterion looks wrong, explain and ask.
+Never delete, skip or weaken a test to get to green (the acceptance test's
+expected-to-fail mark until the feature is done is the one exception,
+`testing.md`). If a test or a criterion looks wrong, explain and ask.
